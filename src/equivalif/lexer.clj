@@ -1,9 +1,18 @@
 (ns equivalif.lexer
   (:require [clojure.string :as string]))
 
+(declare to-token)
+
 (defn lex
   "Transforms source code into a list of tokens"
   [source]
   (if (empty? source)
     []
-    (map #(hash-map :type :variable :name %) (string/split source #" "))))
+    (map to-token (string/split source #" "))))
+
+(defn to-token
+  "Transforms a string symbol into a token"
+  [symbol]
+  (cond
+    (= symbol "&&") {:type :and}
+    :else {:type :variable, :name symbol}))
