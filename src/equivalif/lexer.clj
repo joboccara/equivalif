@@ -15,4 +15,5 @@
   [symbol]
   (cond
     (= symbol "&&") {:type :and}
+    (= symbol "||") {:type :or}
     :else {:type :variable, :name symbol}))

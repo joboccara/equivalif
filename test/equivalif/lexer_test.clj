@@ -16,3 +16,10 @@
            {:type :and}
            {:type :variable, :name "b"}]
            (lex "a && b")))))
+
+(deftest ||-token
+  (testing "|| returns or token"
+    (is (= [{:type :variable, :name "a"},
+           {:type :or}
+           {:type :variable, :name "b"}]
+           (lex "a || b")))))
