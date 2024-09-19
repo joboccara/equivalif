@@ -6,4 +6,4 @@
   [source]
   (if (empty? source)
     []
-    (map #(hash-map :type :variable :value %) (string/split source #" "))))
+    (map #(hash-map :type :variable :name %) (string/split source #" "))))

@@ -8,4 +8,4 @@
 
 (deftest one-variable
   (testing "Symbol returns variable token"
-    (is (= [{:type :variable, :value "value1"}] (lex "value1")))))
+    (is (= [{:type :variable, :name "value1"}] (lex "value1")))))
