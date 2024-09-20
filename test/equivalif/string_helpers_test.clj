@@ -14,3 +14,9 @@
 
 (deftest regex-surrounding
   (testing (is (= ["3" "abc" "4"] (split-keep-separator "3abc4" #"\d")))))
+
+(deftest regex-absent
+  (testing (is (= ["abc"] (split-keep-separator "abc" #"\d")))))
+
+(deftest regex-empty
+  (testing (is (= [] (split-keep-separator "" #"\d")))))
