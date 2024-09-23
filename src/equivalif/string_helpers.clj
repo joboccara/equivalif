@@ -8,8 +8,6 @@
   (if (empty? input) result
   (let [matcher (re-matcher regex input)]
     (if (.find matcher)
-    (let [chunk-end (if (= 0 (.start matcher)) (.end matcher) (.start matcher))]
-      (recur (into result [(subs input 0 chunk-end)])
-             (subs input chunk-end)
-             regex))
+      (let [chunk-end (if (= 0 (.start matcher)) (.end matcher) (.start matcher))]
+        (recur (into result [(subs input 0 chunk-end)]) (subs input chunk-end) regex))
       (into result [input]))))))
