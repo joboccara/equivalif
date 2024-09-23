@@ -23,3 +23,9 @@
            {:type :or}
            {:type :variable, :name "b"}]
            (lex "a || b")))))
+
+(deftest paren-token
+  (testing "parentheses returns open or close tokens"
+    (is (= [{:type :open},
+           {:type :variable, :name "a"}]
+           (lex "(a")))))
