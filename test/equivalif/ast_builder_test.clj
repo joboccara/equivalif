@@ -6,6 +6,6 @@
   (testing "Returns a list representing the boolean expression"
   (is (= '(a) (parse "a")))))
 
-#_(deftest and-expression
+(deftest and-expression
   (testing
     (is (= '(and a b) (parse "a && b")))))
