@@ -24,8 +24,26 @@
            {:type :variable, :name "b"}]
            (lex "a || b")))))
 
-(deftest paren-token
+(deftest open-paren-token
   (testing "parentheses returns open or close tokens"
     (is (= [{:type :open},
-           {:type :variable, :name "a"}]
+            {:type :variable, :name "a"}]
            (lex "(a")))))
+
+(deftest close-paren-token
+  (testing "parentheses returns open or close tokens"
+    (is (= [{:type :variable, :name "a"},
+            {:type :close}]
+           (lex "a)")))))
+
+(deftest paren-tokens
+  (testing "parentheses returns open or close tokens"
+    (is (= [{:type :open},
+            {:type :open},
+            {:type :variable, :name "a"}
+            {:type :close},
+            {:type :open},
+            {:type :variable, :name "b"},
+            {:type :close},
+            {:type :close}]
+           (lex "((a) (b))")))))

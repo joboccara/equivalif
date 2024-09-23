@@ -22,4 +22,5 @@
     (= symbol "&&") {:type :and}
     (= symbol "||") {:type :or}
     (= symbol "(") {:type :open}
+    (= symbol ")") {:type :close}
     :else {:type :variable, :name symbol}))

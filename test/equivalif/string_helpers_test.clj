@@ -20,3 +20,6 @@
 
 (deftest regex-empty
   (testing (is (= [] (split-keep-separator "" #"\d")))))
+
+(deftest consectutive-occurences-of-regex
+  (testing (is (= ["a" "a" "b" "a"] (split-keep-separator "aaba" #"a")))))
