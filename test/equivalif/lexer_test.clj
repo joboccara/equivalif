@@ -24,6 +24,11 @@
            {:type :variable, :name "b"}]
            (lex "a || b")))))
 
+(deftest !-token
+  (testing "! returns not token"
+    (is (= [{:type :not}, {:type :variable, :name "a"}]
+           (lex "!a")))))
+
 (deftest open-paren-token
   (testing "parentheses returns open or close tokens"
     (is (= [{:type :open},

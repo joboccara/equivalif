@@ -33,6 +33,7 @@
   (cond
     (= :and (:type token)) 'and
     (= :or (:type token)) 'or
+    (= :not (:type token)) 'not
     :else (symbol (:name token))))
 
 (defn deep-seq

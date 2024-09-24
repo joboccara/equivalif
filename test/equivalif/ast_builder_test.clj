@@ -14,6 +14,10 @@
   (testing
     (is (= '(or a b) (parse "a || b")))))
 
+(deftest not-expression
+  (testing
+   (is (= '(not a) (parse "!a")))))
+
 (deftest nested-expressions
   (testing
-   (is (= '(and (or a (and b c)) (or a (and c d))) (parse "(a || (b && c)) && (a || (c && d))")))))
+   (is (= '(and (or a (not (and b c))) (or a (and c d))) (parse "(a || (!(b && c))) && (a || (c && d))")))))
