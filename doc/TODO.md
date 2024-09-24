@@ -1,0 +1,3 @@
+- Allow expressions such as `a && !b` without having to add parentheses like `a && (!b)`
+- Implement operator precedence to allow `a && b || c`
+- Allow full if-else statements
