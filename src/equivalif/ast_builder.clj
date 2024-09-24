@@ -11,7 +11,7 @@
 
 (defn infix-operator?
   [symb]
-  (some #(= % symb) ['and]))
+  (some #(= % symb) ['and 'or]))
 
 (defn ast-infix
   ([tokens] (ast-infix [[]] tokens))
@@ -24,6 +24,7 @@
   [token]
   (cond
     (= :and (:type token)) 'and
+    (= :or (:type token)) 'or
     :else (symbol (:name token))))
 
 (def ast (comp infix-to-prefix ast-infix))

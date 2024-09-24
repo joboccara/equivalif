@@ -9,3 +9,7 @@
 (deftest and-expression
   (testing
     (is (= '(and a b) (parse "a && b")))))
+
+(deftest or-expression
+  (testing
+    (is (= '(or a b) (parse "a || b")))))
