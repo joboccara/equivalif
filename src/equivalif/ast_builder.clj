@@ -27,5 +27,9 @@
     (= :or (:type token)) 'or
     :else (symbol (:name token))))
 
-(def ast (comp infix-to-prefix ast-infix))
+(defn deep-seq
+  [ast]
+  (if (coll? ast) (map deep-seq ast) ast))
+
+(def ast (comp deep-seq infix-to-prefix ast-infix))
 (def parse (comp ast lex))
