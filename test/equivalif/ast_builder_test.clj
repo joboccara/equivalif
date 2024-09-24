@@ -13,3 +13,7 @@
 (deftest or-expression
   (testing
     (is (= '(or a b) (parse "a || b")))))
+
+(deftest nested-expressions
+  (testing
+   (is (= '(and (or a (and b c)) (or a (and c d))) (parse "(a || (b && c)) && (a || (c && d))")))))
