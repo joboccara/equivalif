@@ -7,7 +7,7 @@
   (testing "Returns a boolean indicating if the expressions are comparable and can be invoked with truth-table-diff"
     (is (comparable? "a && b" "a || b"))))
 
-(deftest not-comparable-expressions
+(deftest non-comparable-expressions
   (testing "Returns a boolean indicating if the expressions are comparable and can be invoked with truth-table-diff"
     (is (not (comparable? "a && b" "a || c")))))
 
@@ -25,6 +25,12 @@
            (truth-table-diff
             (truth-table "a && b")
             (truth-table "a || b"))))))
+
+(deftest comparing-non-comparable-expressions
+  (testing
+  (let [diff `(truth-table-diff (truth-table "a && b") (truth-table "a && c"))]
+   (is (thrown? clojure.lang.ExceptionInfo (eval diff)))
+    (try (eval diff) (catch clojure.lang.ExceptionInfo e (is (= "Truth tables are not comparable" (ex-message e))))))))
 
 (deftest compare-variable-maps-first-less
   (testing "Lexicographical order (based on alphabetical order of keys) of values of 2 maps with identical keys"
