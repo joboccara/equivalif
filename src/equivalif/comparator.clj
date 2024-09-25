@@ -16,13 +16,17 @@
 
 (declare compare-variable-maps)
 
-(defn truth-table-diff
+(defn truth-table-diff-from-truth-tables
   [truth-table1 truth-table2]
   (if (not (comparable-truth-tables? truth-table1 truth-table2)) (throw (ex-info "Truth tables are not comparable" {}))
   (remove #(= (:first %) (:second %))
           (map #(hash-map :variables (:variables %1) :first (:result %1) :second (:result %2))
                (sort-by :variables compare-variable-maps truth-table1)
                (sort-by :variables compare-variable-maps truth-table2)))))
+
+(defn truth-table-diff
+  [expression1 expression2]
+  (truth-table-diff-from-truth-tables (truth-table expression1) (truth-table expression2)))
 
 (defn compare-variable-maps
   "Assumes the same variables in both inputs"
