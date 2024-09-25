@@ -3,6 +3,14 @@
             [equivalif.comparator :refer :all]
             [equivalif.evaluator :refer :all]))
 
+(deftest comparable-expressions
+  (testing "Returns a boolean indicating if the expressions are comparable and can be invoked with truth-table-diff"
+    (is (comparable? "a && b" "a || b"))))
+
+(deftest not-comparable-expressions
+  (testing "Returns a boolean indicating if the expressions are comparable and can be invoked with truth-table-diff"
+    (is (not (comparable? "a && b" "a || c")))))
+
 (deftest equivalent-expressions
   (testing "The diff between two equivalent expressions is empty"
     (is (= [] (truth-table-diff

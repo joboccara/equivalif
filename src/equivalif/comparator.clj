@@ -1,5 +1,18 @@
-(ns equivalif.comparator)
+(ns equivalif.comparator
+  (:require [equivalif.evaluator :refer :all]))
 
+(declare comparable-truth-tables?)
+
+(defn comparable?
+  [expression1 expression2]
+  (comparable-truth-tables? (truth-table expression1) (truth-table expression2)))
+
+(defn comparable-truth-tables?
+  [truth-table1 truth-table2]
+  (cond
+    (and (empty? truth-table1) (empty? truth-table2)) true
+    (or (empty? truth-table1) (empty? truth-table2)) false
+    :else (= (keys (:variables (first truth-table1))) (keys (:variables (first truth-table2))))))
 
 (declare compare-variable-maps)
 
