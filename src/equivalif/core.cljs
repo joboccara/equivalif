@@ -1,12 +1,7 @@
 (ns equivalif.core
-  (:require [reagent.dom :as rdom]))
+  (:require [reagent.dom :as rdom] [equivalif.app]))
 
-;; Define a Reagent component
-(defn app []
-  [:div
-   [:h1 "Hello, Equivalif"]
-   [:p "You'll never wonder if two ifs are equivalent again"]])
+(defn app [] equivalif.app/app)
 
-;; Initialize the app and render it into the #app div
 (defn init []
   (rdom/render [app] (.getElementById js/document "app")))
