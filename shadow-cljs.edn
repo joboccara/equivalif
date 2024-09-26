@@ -9,6 +9,6 @@
  {:app {:target :browser
         :output-dir "public/js"
         :asset-path "/js"
-        :modules {:main {:init-fn my-reagent-app.core/init}}
+        :modules {:main {:init-fn equivalif.core/init}}
         :devtools {:http-root "public"
                    :http-port 3000}}}}
