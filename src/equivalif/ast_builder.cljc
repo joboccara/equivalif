@@ -1,5 +1,5 @@
 (ns equivalif.ast-builder
-  (:require [equivalif.lexer :refer :all]))
+  (:require [equivalif.lexer :as l]))
 
 (declare add-token-to-stack ast-infix infix-operator? token-to-symbol)
 
@@ -41,4 +41,4 @@
   (if (coll? ast) (map deep-seq ast) ast))
 
 (def ast (comp deep-seq infix-to-prefix ast-infix))
-(def parse (comp ast lex))
+(def parse (comp ast l/lex))

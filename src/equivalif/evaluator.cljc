@@ -1,6 +1,6 @@
 (ns equivalif.evaluator
   (:require [clojure.set :as set]
-            [equivalif.ast-builder :refer :all]))
+            [equivalif.ast-builder :as ast]))
 
 (declare boolean-symbol? cartesian-product find-vars find-vars-in-ast)
 
@@ -29,5 +29,5 @@
   [symb]
   (some #(= % symb) ['and 'or 'not]))
 
-(def find-vars (comp find-vars-in-ast parse))
-(def truth-table (comp truth-table-from-ast parse))
+(def find-vars (comp find-vars-in-ast ast/parse))
+(def truth-table (comp truth-table-from-ast ast/parse))

@@ -1,11 +1,11 @@
 (ns equivalif.comparator
-  (:require [equivalif.evaluator :refer :all]))
+  (:require [equivalif.evaluator :as e]))
 
 (declare comparable-truth-tables?)
 
 (defn comparable?
   [expression1 expression2]
-  (comparable-truth-tables? (truth-table expression1) (truth-table expression2)))
+  (comparable-truth-tables? (e/truth-table expression1) (e/truth-table expression2)))
 
 (defn comparable-truth-tables?
   [truth-table1 truth-table2]
@@ -26,7 +26,7 @@
 
 (defn truth-table-diff
   [expression1 expression2]
-  (truth-table-diff-from-truth-tables (truth-table expression1) (truth-table expression2)))
+  (truth-table-diff-from-truth-tables (e/truth-table expression1) (e/truth-table expression2)))
 
 (defn compare-variable-maps
   "Assumes the same variables in both inputs"
