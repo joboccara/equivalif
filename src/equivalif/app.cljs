@@ -1,15 +1,18 @@
 (ns equivalif.app
-  (:require [reagent.core :as r]))
+  (:require [reagent.core :as r]
+            [equivalif.evaluator :as e]))
 
 (defn on-submit [event form-data]
   (.preventDefault event))
 
-(declare text-input expressions-form)
+(declare expressions-form text-input truth-table)
 
 (def app 
-  (let [expressions (r/atom {:expression1 "", :expression2 ""})]
+  (let [expressions (r/atom {:expression1 "a && b", :expression2 ""})]
   (fn []
-    (expressions-form expressions))))
+    (conj
+     (expressions-form expressions)
+     (truth-table expressions)))))
 
 (defn expressions-form [expressions]
    [:<>
@@ -24,6 +27,9 @@
          [:label {:for "expression2"} "Expression 2"] (text-input expressions :expression2)]
        [:div
          [:button {:type "submit"} "Compare"]]]])
+
+(defn truth-table [expressions]
+  [:div (e/truth-table (:expression1 @expressions))])
 
 (defn text-input [expressions kw]
   [:input {:type "text"
