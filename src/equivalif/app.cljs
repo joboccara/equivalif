@@ -10,15 +10,15 @@
 (def app 
   (let [expressions (r/atom {:expression1 "a && b", :expression2 ""})]
   (fn []
-    (conj
-     (expressions-form expressions)
-     (truth-table expressions)))))
-
-(defn expressions-form [expressions]
    [:<>
      [:div
        [:h1 "Equivalif"]
-       [:p "You'll never wonder if two ifs are equivalent again"]] 
+       [:p "You'll never wonder if two ifs are equivalent again"]]
+     (conj
+       (expressions-form expressions)
+       (truth-table expressions))])))
+
+(defn expressions-form [expressions]
      [:form
        {:on-submit (fn [event] (on-submit event expressions))}
        [:div
@@ -26,7 +26,7 @@
        [:div
          [:label {:for "expression2"} "Expression 2"] (text-input expressions :expression2)]
        [:div
-         [:button {:type "submit"} "Compare"]]]])
+         [:button {:type "submit"} "Compare"]]])
 
 (defn truth-table [expressions]
   [:div (e/truth-table (:expression1 @expressions))])
