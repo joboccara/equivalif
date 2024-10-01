@@ -8,7 +8,7 @@
   (cljs/eval st expr
              {:eval cljs/js-eval}
              (fn [value]
-               (reset! result value)))
+               (reset! result (:value value))))
   @result))
 
 (def p-eval eval-cljs)
