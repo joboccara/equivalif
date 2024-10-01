@@ -21,13 +21,15 @@
             (mapcat #(for [y ys] (vec (concat % [x y]))) combinations))
           [[]] xs))
 
-(defn find-vars-in-ast
+(defn find-unsorted-vars-in-ast
   [ast]
   (cond
     (boolean-symbol? ast) #{}
     (symbol? ast) #{ast}
-    (coll? ast) (apply set/union (map find-vars-in-ast ast))
+    (coll? ast) (apply set/union (map find-unsorted-vars-in-ast ast))
     :else nil))
+
+(def find-vars-in-ast (comp sort find-unsorted-vars-in-ast))
 
 (defn boolean-symbol?
   [symb]

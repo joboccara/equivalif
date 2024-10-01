@@ -4,7 +4,7 @@
 
 (deftest find-vars-test
   (testing "Returns all the variables in a boolean expression"
-    (is (= #{'a 'b 'c} (find-vars "(a && b) || ((!b) || c)")))))
+    (is (= '(a b c) (find-vars "(a && b) || ((!b) || c)")))))
 
 (deftest truth-table-test
   (testing "Returns the value of a boolean expression for each combination of values of its variables"
