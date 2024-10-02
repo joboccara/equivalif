@@ -10,9 +10,8 @@
   (testing "Returns a boolean indicating if the expressions are comparable and can be invoked with compared-truth-table"
     (is (not (comparable? "a && b" "a || c")))))
 
-(deftest non-equivalent-expressions
-  (testing "The diff between two non equivalent expressions is the variable combinations
-            where the results are different along with the results"
+(deftest compared-truth-table-test
+  (testing "The compared truth table is the list of variable combinations along with the results of both expressions"
     (is (= [{:variables {'a false, 'b false} :first false :second false}
             {:variables {'a false, 'b true} :first false :second true}
             {:variables {'a true, 'b false} :first false :second true}
