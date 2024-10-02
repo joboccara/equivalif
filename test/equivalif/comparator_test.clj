@@ -20,6 +20,11 @@
             "a && b"
             "a || b")))))
 
+(deftest compared-single-variable-test
+  (testing (is (= [{:variables {'a false} :first false :second false},
+                   {:variables {'a true} :first true :second true}]
+                  (compared-truth-table "a" "a")))))
+
 (deftest comparing-non-comparable-expressions
   (testing
   (let [diff `(compared-truth-table "a && b" "a && c")]

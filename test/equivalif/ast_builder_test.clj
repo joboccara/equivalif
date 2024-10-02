@@ -2,12 +2,8 @@
  (:require [clojure.test :refer :all]
            [equivalif.ast-builder :refer :all]))
 
-(deftest single-symbol
-  (testing "Returns a list representing the boolean expression"
-  (is (= '(a) (parse "a")))))
-
 (deftest and-expression
-  (testing
+  (testing "Returns a list representing the boolean expression"
     (is (= '(and a b) (parse "a && b")))))
 
 (deftest or-expression
@@ -17,6 +13,10 @@
 (deftest not-expression
   (testing
    (is (= '(not a) (parse "!a")))))
+
+(deftest single-symbol
+  (testing
+   (is (= 'a (parse "a")))))
 
 (deftest nested-expressions
   (testing
