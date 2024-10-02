@@ -3,7 +3,7 @@
             [equivalif.evaluator :as evaluator]
             [equivalif.comparator :as comparator]))
 
-(declare expressions-form text-input truth-table)
+(declare expressions-form non-comparable-expressions text-input truth-table)
 
 (def app 
   (let [expressions (r/atom {:expression1 "a && b", :expression2 "a || b"})]
@@ -14,7 +14,9 @@
        [:p "You'll never wonder if two ifs are equivalent again"]]
      (conj
        (expressions-form expressions)
-       (truth-table expressions))])))
+       (if (comparator/comparable? (:expression1 @expressions) (:expression2 @expressions))
+         (truth-table expressions)
+         non-comparable-expressions))])))
 
 (defn expressions-form [expressions]
      [:form
@@ -42,6 +44,9 @@
          ^{:key (str "value-" (name variable))} [:th (str (get (:variables line) variable))])
        ^{:key "result-1"} [:th (str (:first line))]
        ^{:key "result-2"} [:th (str (:second line))]])]]]))
+
+(def non-comparable-expressions
+  [:div "The expressions don't contain the same variables"])
 
 (defn text-input [expressions kw]
   [:input {:type "text"
