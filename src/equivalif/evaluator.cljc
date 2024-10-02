@@ -4,7 +4,7 @@
             [equivalif.ast-builder :as ast]
             [equivalif.platform :as platform]))
 
-(declare boolean-symbol? generate-combinations find-vars find-vars-in-ast)
+(declare boolean-symbol? generate-combinations find-vars find-vars-in-ast identity-symbol?)
 
 (def inject clojure.walk/prewalk-replace)
 
@@ -25,6 +25,7 @@
   [ast]
   (cond
     (boolean-symbol? ast) #{}
+    (identity-symbol? ast) #{}
     (symbol? ast) #{ast}
     (coll? ast) (apply set/union (map find-unsorted-vars-in-ast ast))
     :else nil))
@@ -34,6 +35,10 @@
 (defn boolean-symbol?
   [symb]
   (some #(= % symb) ['and 'or 'not]))
+
+(defn identity-symbol?
+  [symb]
+  (= symb (first `(identity))))
 
 (def find-vars (comp find-vars-in-ast ast/parse))
 (def truth-table (comp truth-table-from-ast ast/parse))

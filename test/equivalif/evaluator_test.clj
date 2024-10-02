@@ -13,3 +13,9 @@
             {:variables {'a true, 'b false}, :result false},
             {:variables {'a true, 'b true}, :result true}]
            (truth-table "a && b")))))
+
+(deftest truth-table-single-expression
+  (testing
+    (is (= [{:variables {'a false}, :result false},
+            {:variables {'a true}, :result true}]
+           (truth-table "a")))))

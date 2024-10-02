@@ -4,24 +4,36 @@
 
 (deftest and-expression
   (testing "Returns a list representing the boolean expression"
-    (is (= '(and a b) (parse "a && b")))))
+    (is (= '(and (clojure.core/identity a) (clojure.core/identity b)) (parse "a && b")))))
 
 (deftest or-expression
   (testing
-    (is (= '(or a b) (parse "a || b")))))
+    (is (= '(or (clojure.core/identity a) (clojure.core/identity b)) (parse "a || b")))))
 
 (deftest not-expression
   (testing
-   (is (= '(not a) (parse "!a")))))
+   (is (= '(not (clojure.core/identity a)) (parse "!a")))))
 
 (deftest single-symbol
   (testing
-   (is (= 'a (parse "a")))))
+   (is (= '(clojure.core/identity a) (parse "a")))))
 
 (deftest redundant-parentheses
   (testing
-   (is (= 'a (parse "(a)")))))
+   (is (= '(clojure.core/identity a) (parse "(a)")))))
 
 (deftest nested-expressions
   (testing
-   (is (= '(and (or a (not (and b c))) (or a (and c d))) (parse "(a || (!(b && c))) && (a || (c && d))")))))
+   (is (= '(and
+            (or
+             (clojure.core/identity a)
+             (not
+              (and
+               (clojure.core/identity b)
+               (clojure.core/identity c))))
+            (or
+             (clojure.core/identity a)
+             (and
+              (clojure.core/identity c)
+              (clojure.core/identity d))))
+          (parse "(a || (!(b && c))) && (a || (c && d))")))))
