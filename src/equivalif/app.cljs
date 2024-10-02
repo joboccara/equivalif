@@ -1,6 +1,7 @@
 (ns equivalif.app
   (:require [reagent.core :as r]
-            [equivalif.evaluator :as e]))
+            [equivalif.evaluator :as evaluator]
+            [equivalif.comparator :as comparator]))
 
 (defn on-submit [event form-data]
   (.preventDefault event))
@@ -8,7 +9,7 @@
 (declare expressions-form text-input truth-table)
 
 (def app 
-  (let [expressions (r/atom {:expression1 "a && b", :expression2 ""})]
+  (let [expressions (r/atom {:expression1 "a && b", :expression2 "a || b"})]
   (fn []
    [:<>
      [:div
@@ -29,7 +30,24 @@
          [:button {:type "submit"} "Compare"]]])
 
 (defn truth-table [expressions]
-  [:div (e/truth-table (:expression1 @expressions))])
+  (let [variables (evaluator/find-vars (:expression1 @expressions))
+        compared-truth-table (comparator/compared-truth-table (:expression1 @expressions) (:expression2 @expressions))]
+  [:div
+   [:table
+    [:thead
+     [:tr
+      (for [variable variables]
+        ^{:key (str "variable-" (name variable))} [:th  variable])
+      ^{:key (str "expression-1")} [:th "Expression 1"]
+      ^{:key (str "expression-2")} [:th "Expression 2"]]]
+    [:tbody
+     (for [line compared-truth-table]
+     ^{:key (str (:variables line))}
+      [:tr
+       (for [variable variables]
+         ^{:key (str "value-" (name variable))} [:th (str (get (:variables line) variable))])
+       ^{:key "result-1"} [:th (str (:first line))]
+       ^{:key "result-1"} [:th (str (:second line))]])]]]))
 
 (defn text-input [expressions kw]
   [:input {:type "text"
