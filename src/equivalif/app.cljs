@@ -6,7 +6,7 @@
 (declare expressions-form non-comparable-expressions text-input truth-table)
 
 (def app 
-  (let [expressions (r/atom {:expression1 "a && b", :expression2 "a || b"})]
+  (let [expressions (r/atom {:expression1 "", :expression2 ""})]
   (fn []
    [:<>
      [:div
@@ -14,9 +14,11 @@
        [:p "You'll never wonder if two ifs are equivalent again"]]
      (conj
        (expressions-form expressions)
-       (if (comparator/comparable? (:expression1 @expressions) (:expression2 @expressions))
-         (truth-table expressions)
-         non-comparable-expressions))])))
+       (let [expression1 (:expression1 @expressions) expression2 (:expression2 @expressions)]
+       (cond
+         (or (empty? expression1) (empty? expression2)) nil
+         (comparator/comparable? expression1 expression2) (truth-table expressions)
+         :else non-comparable-expressions)))])))
 
 (defn expressions-form [expressions]
      [:form
