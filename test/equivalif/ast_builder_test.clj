@@ -18,6 +18,10 @@
   (testing
    (is (= 'a (parse "a")))))
 
+(deftest redundant-parentheses
+  (testing
+   (is (= 'a (parse "(a)")))))
+
 (deftest nested-expressions
   (testing
    (is (= '(and (or a (not (and b c))) (or a (and c d))) (parse "(a || (!(b && c))) && (a || (c && d))")))))
