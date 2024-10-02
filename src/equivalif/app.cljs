@@ -3,9 +3,6 @@
             [equivalif.evaluator :as evaluator]
             [equivalif.comparator :as comparator]))
 
-(defn on-submit [event form-data]
-  (.preventDefault event))
-
 (declare expressions-form text-input truth-table)
 
 (def app 
@@ -21,13 +18,10 @@
 
 (defn expressions-form [expressions]
      [:form
-       {:on-submit (fn [event] (on-submit event expressions))}
        [:div
          [:label {:for "expression1"} "Expression 1"] (text-input expressions :expression1)]
        [:div
-         [:label {:for "expression2"} "Expression 2"] (text-input expressions :expression2)]
-       [:div
-         [:button {:type "submit"} "Compare"]]])
+         [:label {:for "expression2"} "Expression 2"] (text-input expressions :expression2)]])
 
 (defn truth-table [expressions]
   (let [variables (evaluator/find-vars (:expression1 @expressions))
@@ -47,7 +41,7 @@
        (for [variable variables]
          ^{:key (str "value-" (name variable))} [:th (str (get (:variables line) variable))])
        ^{:key "result-1"} [:th (str (:first line))]
-       ^{:key "result-1"} [:th (str (:second line))]])]]]))
+       ^{:key "result-2"} [:th (str (:second line))]])]]]))
 
 (defn text-input [expressions kw]
   [:input {:type "text"
