@@ -32,20 +32,18 @@
         compared-truth-table (comparator/compared-truth-table (:expression1 @expressions) (:expression2 @expressions))]
   [:div
    [:table {:class "truth-table"}
-    [:thead
+    [:tr
+     (for [variable variables]
+       ^{:key (str "variable-" (name variable))} [:th  variable])
+     ^{:key (str "expression-1")} [:th (:expression1 @expressions)]
+     ^{:key (str "expression-2")} [:th (:expression2 @expressions)]]
+    (for [line compared-truth-table]
+    ^{:key (str (:variables line))}
      [:tr
       (for [variable variables]
-        ^{:key (str "variable-" (name variable))} [:th  variable])
-      ^{:key (str "expression-1")} [:th (:expression1 @expressions)]
-      ^{:key (str "expression-2")} [:th (:expression2 @expressions)]]]
-    [:tbody
-     (for [line compared-truth-table]
-     ^{:key (str (:variables line))}
-      [:tr
-       (for [variable variables]
-         ^{:key (str "value-" (name variable))} [:th (str (get (:variables line) variable))])
-       ^{:key "result-1"} [:th (str (:first line))]
-       ^{:key "result-2"} [:th (str (:second line))]])]]]))
+        ^{:key (str "value-" (name variable))} [:td (str (get (:variables line) variable))])
+      ^{:key "result-1"} [:td (str (:first line))]
+      ^{:key "result-2"} [:td (str (:second line))]])]]))
 
 (def non-comparable-expressions
   [:div "The expressions don't contain the same variables"])
