@@ -18,3 +18,11 @@
     padding: 12px 35px;
   }
 }
+
+.match {
+  background: #35d68b;
+}
+
+.mismatch {
+  background: #ff6464;
+}

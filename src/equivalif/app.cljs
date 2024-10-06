@@ -3,7 +3,7 @@
             [equivalif.evaluator :as evaluator]
             [equivalif.comparator :as comparator]))
 
-(declare expressions-form non-comparable-expressions text-input truth-table)
+(declare expressions-form matching-class non-comparable-expressions text-input truth-table)
 
 (def app 
   (let [expressions (r/atom {:expression1 "a && b", :expression2 "a || b"})]
@@ -42,8 +42,11 @@
      [:tr
       (for [variable variables]
         ^{:key (str "value-" (name variable))} [:td (str (get (:variables line) variable))])
-      ^{:key "result-1"} [:td (str (:first line))]
-      ^{:key "result-2"} [:td (str (:second line))]])]]))
+      ^{:key "result-1"} [:td {:class (matching-class (:first line) (:second line))} (str (:first line))]
+      ^{:key "result-2"} [:td {:class (matching-class (:first line) (:second line))} (str (:second line))]])]]))
+
+(defn matching-class [v1 v2]
+  (if (= v1 v2) "match" "mismatch"))
 
 (def non-comparable-expressions
   [:div "The expressions don't contain the same variables"])
