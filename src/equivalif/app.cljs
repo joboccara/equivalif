@@ -6,7 +6,7 @@
 (declare expressions-form non-comparable-expressions text-input truth-table)
 
 (def app 
-  (let [expressions (r/atom {:expression1 "", :expression2 ""})]
+  (let [expressions (r/atom {:expression1 "a && b", :expression2 "a || b"})]
   (fn []
    [:<>
      [:div
@@ -31,13 +31,13 @@
   (let [variables (evaluator/find-vars (:expression1 @expressions))
         compared-truth-table (comparator/compared-truth-table (:expression1 @expressions) (:expression2 @expressions))]
   [:div
-   [:table
+   [:table {:class "truth-table"}
     [:thead
      [:tr
       (for [variable variables]
         ^{:key (str "variable-" (name variable))} [:th  variable])
-      ^{:key (str "expression-1")} [:th "Expression 1"]
-      ^{:key (str "expression-2")} [:th "Expression 2"]]]
+      ^{:key (str "expression-1")} [:th (:expression1 @expressions)]
+      ^{:key (str "expression-2")} [:th (:expression2 @expressions)]]]
     [:tbody
      (for [line compared-truth-table]
      ^{:key (str (:variables line))}
