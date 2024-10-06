@@ -26,3 +26,17 @@
 .mismatch {
   background: #ff6464;
 }
+
+.logo {
+  max-width: 40%;
+  max-width: 400px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.subtitle {
+  text-align: center;
+  font-family: 'Courier New', Courier, monospace;
+  margin-bottom: 30px;
+}

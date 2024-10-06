@@ -10,8 +10,8 @@
   (fn []
    [:<>
      [:div
-       [:h1 "Equivalif"]
-       [:p "You'll never wonder if two ifs are equivalent again"]]
+       [:img {:src "/logo.png" :class "logo"}]
+       [:p {:class "subtitle"} "You'll never wonder if two ifs are equivalent again"]]
      (conj
        (expressions-form expressions)
        (let [expression1 (:expression1 @expressions) expression2 (:expression2 @expressions)]
