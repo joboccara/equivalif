@@ -32,18 +32,19 @@
         compared-truth-table (comparator/compared-truth-table (:expression1 @expressions) (:expression2 @expressions))]
   [:div
    [:table {:class "truth-table"}
-    [:tr
+    [:tbody
+     [:tr
      (for [variable variables]
        ^{:key (str "variable-" (name variable))} [:th  variable])
      ^{:key (str "expression-1")} [:th (:expression1 @expressions)]
      ^{:key (str "expression-2")} [:th (:expression2 @expressions)]]
-    (for [line compared-truth-table]
-    ^{:key (str (:variables line))}
+     (for [line compared-truth-table]
+     ^{:key (str (:variables line))}
      [:tr
-      (for [variable variables]
-        ^{:key (str "value-" (name variable))} [:td (str (get (:variables line) variable))])
-      ^{:key "result-1"} [:td {:class (matching-class (:first line) (:second line))} (str (:first line))]
-      ^{:key "result-2"} [:td {:class (matching-class (:first line) (:second line))} (str (:second line))]])]]))
+       (for [variable variables]
+         ^{:key (str "value-" (name variable))} [:td (str (get (:variables line) variable))])
+       ^{:key "result-1"} [:td {:class (matching-class (:first line) (:second line))} (str (:first line))]
+       ^{:key "result-2"} [:td {:class (matching-class (:first line) (:second line))} (str (:second line))]])]]]))
 
 (defn matching-class [v1 v2]
   (if (= v1 v2) "match" "mismatch"))
