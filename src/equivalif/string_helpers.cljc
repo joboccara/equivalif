@@ -20,8 +20,8 @@
      (let [regex (js/RegExp. regex)]
        (let [match (.exec regex string)]
          (when match
-           {:start (.index match)
-            :end (+ (.index match) (count (first match)))})))
+           {:start (.-index match)
+            :end (+ (.-index match) (count (first match)))})))
      :clj
      (let [matcher (re-matcher regex string)]
        (when (.find matcher)
