@@ -57,4 +57,5 @@
            :type "text"
            :id (name kw)
            :name (name kw)
+           :value (kw @expressions)
            :on-change #(swap! expressions assoc kw (-> % .-target .-value))}])
