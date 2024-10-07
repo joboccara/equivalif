@@ -51,7 +51,7 @@
 .expression-label {
   font-family: 'Courier New', Courier, monospace;
   font-size: 20px;
-  font-variant: small-caps;
+  text-transform: uppercase;
 }
 
 .expression-input {
@@ -61,4 +61,5 @@
   margin-left: 20px;
   margin-top: 5px;
   margin-bottom: 10px;
+  text-align: center;
 }
