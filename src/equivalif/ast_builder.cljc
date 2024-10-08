@@ -1,7 +1,7 @@
 (ns equivalif.ast-builder
   (:require [equivalif.lexer :as l]))
 
-(declare add-token-to-stack addable-to-stack ast-infix infix-operator? minimal-ast token-to-symbol)
+(declare add-token-to-stack addable-to-stack ast-infix infix-operator? trim-redundant-external-parens token-to-symbol)
 
 (defn infix-to-prefix [ast]
   (if (symbol? ast) ast ; else ast is a collection
@@ -16,7 +16,7 @@
 (defn ast-infix
   ([tokens] (ast-infix [[]] tokens))
   ([stack tokens]
-  (cond (empty? tokens) (minimal-ast (last stack))
+  (cond (empty? tokens) (trim-redundant-external-parens (last stack))
         (not (addable-to-stack stack (first tokens))) '()
         :else (recur (add-token-to-stack stack (first tokens)) (rest tokens)))))
 
@@ -41,11 +41,8 @@
     (= :not (:type token)) 'not
     :else `(identity ~(symbol (:name token)))))
 
-(defn minimal-ast [ast]
-  (cond
-    (symbol? ast) ast
-    (= 1 (count ast)) (minimal-ast (first ast))
-    :else ast))
+(defn trim-redundant-external-parens [ast]
+  (if (= 1 (count ast)) (trim-redundant-external-parens (first ast)) ast))
 
 (defn deep-seq
   [ast]
