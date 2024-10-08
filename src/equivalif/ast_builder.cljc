@@ -48,7 +48,10 @@
   (= 1 (count stack)))
 
 (defn trim-redundant-external-parens [ast]
-  (if (= 1 (count ast)) (trim-redundant-external-parens (first ast)) ast))
+  (cond
+    (not (coll? ast)) invalid-expression
+    (= 1 (count ast)) (trim-redundant-external-parens (first ast))
+    :else ast))
 
 (defn deep-seq
   [ast]

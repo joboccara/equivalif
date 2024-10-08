@@ -46,3 +46,6 @@
 
 (deftest unbalanced-parens-test2
   (testing (is (= '() (parse "a && (b && c))")))))
+
+(deftest single-not
+  (testing (is (= '() (parse "!")))))
