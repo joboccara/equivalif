@@ -1,7 +1,7 @@
 (ns equivalif.ast-builder
   (:require [equivalif.lexer :as l]))
 
-(declare add-token-to-stack addable-to-stack ast-infix infix-operator? trim-redundant-external-parens token-to-symbol)
+(declare add-token-to-stack addable-to-stack ast-infix balanced? infix-operator? trim-redundant-external-parens token-to-symbol)
 
 (defn infix-to-prefix [ast]
   (if (symbol? ast) ast ; else ast is a collection
@@ -13,11 +13,13 @@
   [symb]
   (some #(= % symb) ['and 'or]))
 
+(def invalid-expression '())
+
 (defn ast-infix
   ([tokens] (ast-infix [[]] tokens))
   ([stack tokens]
-  (cond (empty? tokens) (trim-redundant-external-parens (last stack))
-        (not (addable-to-stack stack (first tokens))) '()
+  (cond (empty? tokens) (if (balanced? stack) (trim-redundant-external-parens (last stack)) invalid-expression)
+        (not (addable-to-stack stack (first tokens))) invalid-expression
         :else (recur (add-token-to-stack stack (first tokens)) (rest tokens)))))
 
 (defn add-token-to-stack
@@ -40,6 +42,10 @@
     (= :or (:type token)) 'or
     (= :not (:type token)) 'not
     :else `(identity ~(symbol (:name token)))))
+
+(defn balanced?
+  [stack]
+  (= 1 (count stack)))
 
 (defn trim-redundant-external-parens [ast]
   (if (= 1 (count ast)) (trim-redundant-external-parens (first ast)) ast))

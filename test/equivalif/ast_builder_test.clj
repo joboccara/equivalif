@@ -41,5 +41,8 @@
 (deftest close-without-open
   (testing (is (= '() (parse ")")))))
 
+(deftest unbalanced-parens-test1
+  (testing (is (= '() (parse "a && (b || (c)")))))
+
 (deftest unbalanced-parens-test2
   (testing (is (= '() (parse "a && (b && c))")))))
