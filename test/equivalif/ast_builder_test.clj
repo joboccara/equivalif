@@ -37,3 +37,9 @@
               (clojure.core/identity c)
               (clojure.core/identity d))))
           (parse "(a || (!(b && c))) && (a || (c && d))")))))
+
+(deftest close-without-open
+  (testing (is (= '() (parse ")")))))
+
+(deftest unbalanced-parens-test2
+  (testing (is (= '() (parse "a && (b && c))")))))

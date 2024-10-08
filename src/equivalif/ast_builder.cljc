@@ -1,7 +1,7 @@
 (ns equivalif.ast-builder
   (:require [equivalif.lexer :as l]))
 
-(declare add-token-to-stack ast-infix infix-operator? minimal-ast token-to-symbol)
+(declare add-token-to-stack addable-to-stack ast-infix infix-operator? minimal-ast token-to-symbol)
 
 (defn infix-to-prefix [ast]
   (if (symbol? ast) ast ; else ast is a collection
@@ -16,8 +16,9 @@
 (defn ast-infix
   ([tokens] (ast-infix [[]] tokens))
   ([stack tokens]
-  (if (empty? tokens) (minimal-ast (last stack))
-  (recur (add-token-to-stack stack (first tokens)) (rest tokens)))))
+  (cond (empty? tokens) (minimal-ast (last stack))
+        (not (addable-to-stack stack (first tokens))) '()
+        :else (recur (add-token-to-stack stack (first tokens)) (rest tokens)))))
 
 (defn add-token-to-stack
   [stack token]
@@ -27,6 +28,10 @@
     open? (conj stack [])
     close? (conj (pop (pop stack)) (conj (last (pop stack)) (last stack)))
     :else (conj (pop stack) (conj (last stack) (token-to-symbol token))))))
+
+(defn addable-to-stack
+  [stack token]
+  (not (and (= :close (:type token)) (<= (count stack) 1))))
 
 (defn token-to-symbol
   [token]
