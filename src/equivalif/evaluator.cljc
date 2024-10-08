@@ -8,8 +8,7 @@
 
 (def inject clojure.walk/prewalk-replace)
 
-(defn truth-table-from-ast
-  [ast]
+(defn truth-table-from-ast [ast]
   (let [vars (find-vars-in-ast ast)]
     (for [combination (generate-combinations vars [false true])]
       (let [variables-map (apply hash-map combination)]
@@ -21,8 +20,7 @@
             (mapcat #(for [y ys] (vec (concat % [x y]))) combinations))
           [[]] xs))
 
-(defn find-unsorted-vars-in-ast
-  [ast]
+(defn find-unsorted-vars-in-ast [ast]
   (cond
     (boolean-symbol? ast) #{}
     (identity-symbol? ast) #{}
@@ -32,12 +30,10 @@
 
 (def find-vars-in-ast (comp sort find-unsorted-vars-in-ast))
 
-(defn boolean-symbol?
-  [symb]
+(defn boolean-symbol?  [symb]
   (some #(= % symb) ['and 'or 'not]))
 
-(defn identity-symbol?
-  [symb]
+(defn identity-symbol?  [symb]
   (= symb (first `(identity))))
 
 (def find-vars (comp find-vars-in-ast ast/parse))

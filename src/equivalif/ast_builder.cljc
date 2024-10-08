@@ -10,8 +10,7 @@
     [(second ast) (infix-to-prefix (first ast)) (infix-to-prefix (last ast))]
     (map infix-to-prefix ast))))
 
-(defn infix-operator?
-  [symb]
+(defn infix-operator?  [symb]
   (some #(= % symb) ['and 'or]))
 
 (def invalid-expression '())
@@ -23,8 +22,7 @@
         (not (addable-to-stack stack (first tokens))) invalid-expression
         :else (recur (add-token-to-stack stack (first tokens)) (rest tokens)))))
 
-(defn add-token-to-stack
-  [stack token]
+(defn add-token-to-stack [stack token]
   (let [open? (= :open (:type token))
         close? (= :close (:type token))]
   (cond
@@ -32,24 +30,20 @@
     close? (conj (pop (pop stack)) (conj (last (pop stack)) (last stack)))
     :else (conj (pop stack) (conj (last stack) (token-to-symbol token))))))
 
-(defn addable-to-stack
-  [stack token]
+(defn addable-to-stack [stack token]
   (not (and (= :close (:type token)) (<= (count stack) 1))))
 
-(defn token-to-symbol
-  [token]
+(defn token-to-symbol [token]
   (cond
     (= :and (:type token)) 'and
     (= :or (:type token)) 'or
     (= :not (:type token)) 'not
     :else `(identity ~(symbol (:name token)))))
 
-(defn balanced?
-  [stack]
+(defn balanced?  [stack]
   (= 1 (count stack)))
 
-(defn arity
-  [operator]
+(defn arity [operator]
   (condp = operator
     'and 2
     'or 2
@@ -57,8 +51,7 @@
     platform/qualified-identity-symbol 1
     0))
 
-(defn valid-infix-arity?
-  [ast]
+(defn valid-infix-arity?  [ast]
   (if (symbol? ast) true 
     (if (infix-operator? (second ast))
       (and (= (- (count ast) 1) (arity (second ast)))
@@ -67,8 +60,7 @@
            (every? valid-infix-arity? (rest ast))))))
 
 
-(defn validate-infix-arity
-  [ast]
+(defn validate-infix-arity [ast]
   (if (valid-infix-arity? ast) ast invalid-expression))
 
 (defn trim-redundant-external-parens [ast]
@@ -77,8 +69,7 @@
     (= 1 (count ast)) (trim-redundant-external-parens (first ast))
     :else ast))
 
-(defn deep-seq
-  [ast]
+(defn deep-seq [ast]
   (if (coll? ast) (map deep-seq ast) ast))
 
 (def ast (comp deep-seq infix-to-prefix validate-infix-arity ast-infix))
