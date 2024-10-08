@@ -1,7 +1,7 @@
 (ns equivalif.core
-  (:require [reagent.dom :as rdom] [equivalif.app]))
+  (:require [equivalif.app] [reagent.dom.client :as rdom-client]))
 
 (defn app [] equivalif.app/app)
 
 (defn init []
-  (rdom/render [app] (.getElementById js/document "app")))
+  (rdom-client/render (rdom-client/create-root (.getElementById js/document "app")) [app]))
