@@ -20,4 +20,4 @@
   (reduce #(or %1 %2) false args))
 
 (def boolean-operators-map
-  {'and equivalif.platform-cljs/non-macro-and, 'or equivalif.platform-cljs/non-macro-or, 'not cljs.core/not})
+  {'and equivalif.platform-cljs/non-macro-and, 'or equivalif.platform-cljs/non-macro-or, 'not cljs.core/not, 'cljs.core/identity identity})
