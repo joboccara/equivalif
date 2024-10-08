@@ -21,3 +21,6 @@
 
 (def boolean-operators-map
   {'and equivalif.platform-cljs/non-macro-and, 'or equivalif.platform-cljs/non-macro-or, 'not cljs.core/not, 'cljs.core/identity identity})
+
+(def qualified-identity-symbol
+  'cljs.core/identity)

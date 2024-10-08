@@ -1,5 +1,6 @@
 (ns equivalif.ast-builder
-  (:require [equivalif.lexer :as l]))
+  (:require [equivalif.lexer :as l]
+            [equivalif.platform :as platform]))
 
 (declare add-token-to-stack addable-to-stack ast-infix balanced? infix-operator? trim-redundant-external-parens token-to-symbol)
 
@@ -47,6 +48,29 @@
   [stack]
   (= 1 (count stack)))
 
+(defn arity
+  [operator]
+  (condp = operator
+    'and 2
+    'or 2
+    'not 1
+    platform/qualified-identity-symbol 1
+    0))
+
+(defn valid-infix-arity?
+  [ast]
+  (if (symbol? ast) true 
+    (if (infix-operator? (second ast))
+      (and (= (- (count ast) 1) (arity (second ast)))
+           (every? valid-infix-arity? (cons (first ast) (drop 2 ast))))
+      (and (= (count (rest ast)) (arity (first ast)))
+           (every? valid-infix-arity? (rest ast))))))
+
+
+(defn validate-infix-arity
+  [ast]
+  (if (valid-infix-arity? ast) ast invalid-expression))
+
 (defn trim-redundant-external-parens [ast]
   (cond
     (not (coll? ast)) invalid-expression
@@ -57,5 +81,5 @@
   [ast]
   (if (coll? ast) (map deep-seq ast) ast))
 
-(def ast (comp deep-seq infix-to-prefix ast-infix))
+(def ast (comp deep-seq infix-to-prefix validate-infix-arity ast-infix))
 (def parse (comp ast l/lex))

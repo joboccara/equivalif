@@ -49,3 +49,6 @@
 
 (deftest single-not
   (testing (is (= '() (parse "!")))))
+
+(deftest missing-arg
+  (testing (is (= '() (parse "a &&")))))

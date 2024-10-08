@@ -9,3 +9,7 @@
 (def boolean-operators-map
   #?(:clj p-clj/boolean-operators-map
      :cljs p-cljs/boolean-operators-map))
+
+(def qualified-identity-symbol
+  #?(:clj p-clj/qualified-identity-symbol
+     :cljs p-cljs/qualified-identity-symbol))
