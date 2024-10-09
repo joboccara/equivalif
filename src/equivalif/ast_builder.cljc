@@ -43,20 +43,8 @@
 (defn balanced?  [stack]
   (= 1 (count stack)))
 
-(defn add-parens-for-not-precedence-in-list
-  ([operator ast]
-   (if (symbol? ast) ast
-     (add-parens-for-not-precedence-in-list operator ast (keep-indexed #(when (= %2 operator) %1) ast))))
-  ([operator ast positions]
-   (if (empty? positions) ast
-       (let [begin-position (- (last positions) 0)
-             end-position (+ (last positions) 1)]
-       (if (or (< begin-position 0) (>= end-position (count ast))) invalid-expression
-         (recur operator (concat
-                 (take begin-position ast)
-                 (list (list operator (nth ast end-position)))
-                 (drop (+ end-position 1) ast))
-                (butlast positions)))))))
+(defn no-nil-list [& values]
+  (remove nil? (apply list values)))
 
 (defn add-parens-for-operator-precedence-in-list
   ([operator ast]
@@ -64,17 +52,18 @@
      (add-parens-for-operator-precedence-in-list operator ast (keep-indexed #(when (= %2 operator) %1) ast))))
   ([operator ast positions]
    (if (empty? positions) ast
-       (let [begin-position (- (last positions) 1)
+       (let [infix? (infix-operator? operator)
+             begin-position (- (last positions) (if infix? 1 0))
              end-position (+ (last positions) 1)]
        (if (or (< begin-position 0) (>= end-position (count ast))) invalid-expression
          (recur operator (concat
                  (take begin-position ast)
-                 (list (list (nth ast begin-position) operator (nth ast end-position)))
+                 (list (no-nil-list (when infix? (nth ast begin-position)) operator (nth ast end-position)))
                  (drop (+ end-position 1) ast))
                 (butlast positions)))))))
 
 (defn add-parens-for-precedence-in-list [ast]
-  (add-parens-for-operator-precedence-in-list 'or (add-parens-for-operator-precedence-in-list 'and (add-parens-for-not-precedence-in-list 'not ast))))
+  (add-parens-for-operator-precedence-in-list 'or (add-parens-for-operator-precedence-in-list 'and (add-parens-for-operator-precedence-in-list 'not ast))))
 
 (defn add-parens-for-precedence
   "Applies add-parens-for-precedence-in-list recursively down the AST"
