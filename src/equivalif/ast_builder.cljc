@@ -43,6 +43,20 @@
 (defn balanced?  [stack]
   (= 1 (count stack)))
 
+(defn add-parens-for-precedence
+  ([ast]
+   (if (symbol? ast) ast
+     (add-parens-for-precedence ast (keep-indexed #(when (= %2 'not) %1) ast))))
+  ([ast not-positions]
+   (if (empty? not-positions) ast
+       (let [not-position (last not-positions)]
+       (if (>= (+ 1 not-position) (count ast)) invalid-expression
+         (recur (concat
+                 (take not-position ast)
+                 (list (list 'not (nth ast (+ 1 not-position))))
+                 (drop (+ 2 not-position) ast))
+                (butlast not-positions)))))))
+
 (defn arity [operator]
   (condp = operator
     'and 2
@@ -72,5 +86,5 @@
 (defn deep-seq [ast]
   (if (coll? ast) (map deep-seq ast) ast))
 
-(def ast (comp deep-seq infix-to-prefix validate-infix-arity trim-external-parens ast-infix))
+(def ast (comp deep-seq infix-to-prefix validate-infix-arity trim-external-parens add-parens-for-precedence ast-infix))
 (def parse (comp ast l/lex))
