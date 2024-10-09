@@ -18,9 +18,13 @@
   (testing
    (is (= '(clojure.core/identity a) (parse "a")))))
 
-(deftest redundant-parentheses
+(deftest redundant-external-parens
   (testing
    (is (= '(clojure.core/identity a) (parse "(a)")))))
+
+(deftest redundant-internal-parens
+  (testing (is (= '(and (clojure.core/identity a) (and (clojure.core/identity b) (clojure.core/identity c)))
+                  (parse "a && ((b && c))")))))
 
 (deftest nested-expressions
   (testing
