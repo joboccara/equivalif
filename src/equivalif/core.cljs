@@ -3,5 +3,6 @@
 
 (defn app [] equivalif.app/app)
 
+#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn init []
   (rdom-client/render (rdom-client/create-root (.getElementById js/document "app")) [app]))
