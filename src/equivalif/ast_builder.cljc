@@ -18,7 +18,7 @@
 (defn ast-infix
   ([tokens] (ast-infix [[]] tokens))
   ([stack tokens]
-  (cond (empty? tokens) (if (balanced? stack) (trim-redundant-external-parens (last stack)) invalid-expression)
+  (cond (empty? tokens) (if (balanced? stack) (last stack) invalid-expression)
         (not (addable-to-stack stack (first tokens))) invalid-expression
         :else (recur (add-token-to-stack stack (first tokens)) (rest tokens)))))
 
@@ -72,5 +72,5 @@
 (defn deep-seq [ast]
   (if (coll? ast) (map deep-seq ast) ast))
 
-(def ast (comp deep-seq infix-to-prefix validate-infix-arity ast-infix))
+(def ast (comp deep-seq infix-to-prefix validate-infix-arity trim-redundant-external-parens ast-infix))
 (def parse (comp ast l/lex))
