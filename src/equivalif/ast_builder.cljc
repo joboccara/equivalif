@@ -43,10 +43,10 @@
 (defn balanced?  [stack]
   (= 1 (count stack)))
 
-(defn add-parens-for-precedence-in-list
+(defn add-parens-for-not-precedence-in-list
   ([ast]
    (if (symbol? ast) ast
-     (add-parens-for-precedence-in-list ast (keep-indexed #(when (= %2 'not) %1) ast))))
+     (add-parens-for-not-precedence-in-list ast (keep-indexed #(when (= %2 'not) %1) ast))))
   ([ast not-positions]
    (if (empty? not-positions) ast
        (let [not-position (last not-positions)]
@@ -57,11 +57,30 @@
                  (drop (+ 2 not-position) ast))
                 (butlast not-positions)))))))
 
+(defn add-parens-for-and-precedence-in-list
+  ([ast]
+   (if (symbol? ast) ast
+     (add-parens-for-and-precedence-in-list ast (keep-indexed #(when (= %2 'and) %1) ast))))
+  ([ast and-positions]
+   (if (empty? and-positions) ast
+       (let [and-position (last and-positions)]
+       (if (or (< (- and-position 1) 0) (>= (+ and-position 1) (count ast))) invalid-expression
+         (recur (concat
+                 (take (- and-position 1) ast)
+                 (list (list (nth ast (- and-position 1)) 'and (nth ast (+ and-position 1))))
+                 (drop (+ and-position 2) ast))
+                (butlast and-positions)))))))
+
+(def add-parens-for-precedence-in-list
+  #(-> %
+       add-parens-for-not-precedence-in-list
+       add-parens-for-and-precedence-in-list))
+
 (defn add-parens-for-precedence
   "Applies add-parens-for-precedence-in-list recursively down the AST"
   [ast]
   (if (symbol? ast) ast
-      (map add-parens-for-precedence-in-list (add-parens-for-precedence-in-list ast))))
+      (map add-parens-for-precedence (trim-parens (add-parens-for-precedence-in-list ast)))))
 
 (defn arity [operator]
   (condp = operator
@@ -71,7 +90,7 @@
     platform/qualified-identity-symbol 1
     0))
 
-(defn valid-infix-arity?  [ast]
+(defn valid-infix-arity? [ast]
   (if (symbol? ast) true 
     (if (infix-operator? (second ast))
       (and (= (- (count ast) 1) (arity (second ast)))

@@ -54,6 +54,18 @@
                     (not (clojure.core/identity b)))
                   (parse "a || !b")))))
 
+(deftest precedence-and-over-or
+  (testing (is (= '(or
+                    (and (clojure.core/identity a) (clojure.core/identity b))
+                    (clojure.core/identity c))
+                  (parse "a && b || c")))))
+
+(deftest precedence-two-ands-over-or
+  (testing (is (= '(or
+                    (and (clojure.core/identity a) (clojure.core/identity b))
+                    (and (clojure.core/identity c) (clojure.core/identity d)))
+                  (parse "a && b || c && d")))))
+
 (deftest consecutive-nots
   (testing (is (= '(not (not (clojure.core/identity a)))
                   (parse "!!a")))))
@@ -78,5 +90,8 @@
 (deftest single-not
   (testing (is (= '() (parse "!")))))
 
-(deftest missing-arg
+(deftest missing-first-arg-in-and
+  (testing (is (= '() (parse "&& a")))))
+
+(deftest missing-second-arg-in-and
   (testing (is (= '() (parse "a &&")))))
