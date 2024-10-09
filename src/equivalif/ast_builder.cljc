@@ -74,7 +74,7 @@
 (defn add-parens-for-operator-precedence-in-list
   ([operator ast]
    (if (symbol? ast) ast
-     (add-parens-for-operator-precedence-in-list operator ast (keep-indexed #(when (= %2 'or) %1) ast))))
+     (add-parens-for-operator-precedence-in-list operator ast (keep-indexed #(when (= %2 operator) %1) ast))))
   ([operator ast positions]
    (if (empty? positions) ast
        (let [position (last positions)]
@@ -82,7 +82,7 @@
          (recur operator
                 (concat
                  (take (- position 1) ast)
-                 (list (list (nth ast (- position 1)) 'or (nth ast (+ position 1))))
+                 (list (list (nth ast (- position 1)) operator (nth ast (+ position 1))))
                  (drop (+ position 2) ast))
                 (butlast positions)))))))
 
