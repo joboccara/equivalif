@@ -57,20 +57,6 @@
                  (drop (+ 2 not-position) ast))
                 (butlast not-positions)))))))
 
-(defn add-parens-for-and-precedence-in-list
-  ([ast]
-   (if (symbol? ast) ast
-     (add-parens-for-and-precedence-in-list ast (keep-indexed #(when (= %2 'and) %1) ast))))
-  ([ast and-positions]
-   (if (empty? and-positions) ast
-       (let [and-position (last and-positions)]
-       (if (or (< (- and-position 1) 0) (>= (+ and-position 1) (count ast))) invalid-expression
-         (recur (concat
-                 (take (- and-position 1) ast)
-                 (list (list (nth ast (- and-position 1)) 'and (nth ast (+ and-position 1))))
-                 (drop (+ and-position 2) ast))
-                (butlast and-positions)))))))
-
 (defn add-parens-for-operator-precedence-in-list
   ([operator ast]
    (if (symbol? ast) ast
@@ -87,7 +73,7 @@
                 (butlast positions)))))))
 
 (defn add-parens-for-precedence-in-list [ast]
-  (add-parens-for-operator-precedence-in-list 'or (add-parens-for-and-precedence-in-list (add-parens-for-not-precedence-in-list ast))))
+  (add-parens-for-operator-precedence-in-list 'or (add-parens-for-operator-precedence-in-list 'and (add-parens-for-not-precedence-in-list ast))))
 
 (defn add-parens-for-precedence
   "Applies add-parens-for-precedence-in-list recursively down the AST"
