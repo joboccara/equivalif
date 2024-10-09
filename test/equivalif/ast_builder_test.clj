@@ -1,6 +1,6 @@
 (ns equivalif.ast-builder-test
- (:require [clojure.test :refer :all]
-           [equivalif.ast-builder :refer :all]))
+ (:require [clojure.test :refer [deftest is testing]]
+           [equivalif.ast-builder :refer [parse]]))
 
 (deftest and-expression
   (testing "Returns a list representing the boolean expression"

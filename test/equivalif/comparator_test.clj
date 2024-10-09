@@ -1,6 +1,6 @@
 (ns equivalif.comparator-test
-  (:require [clojure.test :refer :all]
-            [equivalif.comparator :refer :all]))
+  (:require [clojure.test :refer [deftest is testing]]
+            [equivalif.comparator :refer [comparable? compare-variable-maps compared-truth-table]]))
 
 (deftest comparable-expressions
   (testing "Returns a boolean indicating if the expressions are comparable and can be invoked with compared-truth-table"

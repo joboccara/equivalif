@@ -1,6 +1,6 @@
 (ns equivalif.lexer-test
- (:require [clojure.test :refer :all]
-            [equivalif.lexer :refer :all]))
+ (:require [clojure.test :refer [deftest is testing]]
+            [equivalif.lexer :refer [lex]]))
 
 (deftest empty-source
   (testing "Empty source returns empty array"

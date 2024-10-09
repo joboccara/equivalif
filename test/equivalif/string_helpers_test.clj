@@ -1,6 +1,6 @@
 (ns equivalif.string-helpers-test
- (:require [clojure.test :refer :all]
-            [equivalif.string-helpers :refer :all]))
+ (:require [clojure.test :refer [deftest is testing]]
+            [equivalif.string-helpers :refer [split-keep-separator]]))
 
 (deftest regex-inside
   (testing "Returns the separators and the substrings between the separators in their initial order"
