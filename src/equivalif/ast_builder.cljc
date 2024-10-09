@@ -86,5 +86,12 @@
 (defn deep-seq [ast]
   (if (coll? ast) (map deep-seq ast) ast))
 
-(def ast (comp deep-seq infix-to-prefix validate-infix-arity trim-external-parens add-parens-for-precedence ast-infix))
+(def ast #(-> %
+          ast-infix
+          add-parens-for-precedence
+          trim-external-parens
+          validate-infix-arity
+          infix-to-prefix
+          deep-seq))
+
 (def parse (comp ast l/lex))
