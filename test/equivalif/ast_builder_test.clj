@@ -82,6 +82,10 @@
   (testing (is (= '(and (clojure.core/identity a) (and (clojure.core/identity b) (clojure.core/identity c)))
                   (parse "a && b && c")))))
 
+(deftest consecutive-ors
+  (testing (is (= '(or (clojure.core/identity a) (or (clojure.core/identity b) (clojure.core/identity c)))
+                  (parse "a || b || c")))))
+
 (deftest close-without-open
   (testing (is (= '() (parse ")")))))
 

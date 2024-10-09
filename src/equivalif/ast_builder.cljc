@@ -71,10 +71,25 @@
                  (drop (+ and-position 2) ast))
                 (butlast and-positions)))))))
 
+(defn add-parens-for-or-precedence-in-list
+  ([ast]
+   (if (symbol? ast) ast
+     (add-parens-for-or-precedence-in-list ast (keep-indexed #(when (= %2 'or) %1) ast))))
+  ([ast or-positions]
+   (if (empty? or-positions) ast
+       (let [or-position (last or-positions)]
+       (if (or (< (- or-position 1) 0) (>= (+ or-position 1) (count ast))) invalid-expression
+         (recur (concat
+                 (take (- or-position 1) ast)
+                 (list (list (nth ast (- or-position 1)) 'or (nth ast (+ or-position 1))))
+                 (drop (+ or-position 2) ast))
+                (butlast or-positions)))))))
+
 (def add-parens-for-precedence-in-list
   #(-> %
        add-parens-for-not-precedence-in-list
-       add-parens-for-and-precedence-in-list))
+       add-parens-for-and-precedence-in-list
+       add-parens-for-or-precedence-in-list))
 
 (defn add-parens-for-precedence
   "Applies add-parens-for-precedence-in-list recursively down the AST"
