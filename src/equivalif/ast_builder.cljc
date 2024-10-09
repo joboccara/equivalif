@@ -2,7 +2,7 @@
   (:require [equivalif.lexer :as l]
             [equivalif.platform :as platform]))
 
-(declare add-token-to-stack addable-to-stack ast-infix balanced? infix-operator? trim-redundant-external-parens token-to-symbol)
+(declare add-token-to-stack addable-to-stack ast-infix balanced? infix-operator? trim-external-parens token-to-symbol)
 
 (defn infix-to-prefix [ast]
   (if (symbol? ast) ast ; else ast is a collection
@@ -63,14 +63,14 @@
 (defn validate-infix-arity [ast]
   (if (valid-infix-arity? ast) ast invalid-expression))
 
-(defn trim-redundant-external-parens [ast]
+(defn trim-external-parens [ast]
   (cond
     (not (coll? ast)) invalid-expression
-    (= 1 (count ast)) (trim-redundant-external-parens (first ast))
+    (= 1 (count ast)) (trim-external-parens (first ast))
     :else ast))
 
 (defn deep-seq [ast]
   (if (coll? ast) (map deep-seq ast) ast))
 
-(def ast (comp deep-seq infix-to-prefix validate-infix-arity trim-redundant-external-parens ast-infix))
+(def ast (comp deep-seq infix-to-prefix validate-infix-arity trim-external-parens ast-infix))
 (def parse (comp ast l/lex))
