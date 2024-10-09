@@ -44,18 +44,19 @@
   (= 1 (count stack)))
 
 (defn add-parens-for-not-precedence-in-list
-  ([ast]
+  ([operator ast]
    (if (symbol? ast) ast
-     (add-parens-for-not-precedence-in-list ast (keep-indexed #(when (= %2 'not) %1) ast))))
-  ([ast not-positions]
-   (if (empty? not-positions) ast
-       (let [not-position (last not-positions)]
-       (if (>= (+ 1 not-position) (count ast)) invalid-expression
-         (recur (concat
-                 (take not-position ast)
-                 (list (list 'not (nth ast (+ 1 not-position))))
-                 (drop (+ 2 not-position) ast))
-                (butlast not-positions)))))))
+     (add-parens-for-not-precedence-in-list operator ast (keep-indexed #(when (= %2 operator) %1) ast))))
+  ([operator ast positions]
+   (if (empty? positions) ast
+       (let [begin-position (- (last positions) 0)
+             end-position (+ (last positions) 1)]
+       (if (or (< begin-position 0) (>= end-position (count ast))) invalid-expression
+         (recur operator (concat
+                 (take begin-position ast)
+                 (list (list operator (nth ast end-position)))
+                 (drop (+ end-position 1) ast))
+                (butlast positions)))))))
 
 (defn add-parens-for-operator-precedence-in-list
   ([operator ast]
@@ -63,17 +64,17 @@
      (add-parens-for-operator-precedence-in-list operator ast (keep-indexed #(when (= %2 operator) %1) ast))))
   ([operator ast positions]
    (if (empty? positions) ast
-       (let [position (last positions)]
-       (if (or (< (- position 1) 0) (>= (+ position 1) (count ast))) invalid-expression
-         (recur operator
-                (concat
-                 (take (- position 1) ast)
-                 (list (list (nth ast (- position 1)) operator (nth ast (+ position 1))))
-                 (drop (+ position 2) ast))
+       (let [begin-position (- (last positions) 1)
+             end-position (+ (last positions) 1)]
+       (if (or (< begin-position 0) (>= end-position (count ast))) invalid-expression
+         (recur operator (concat
+                 (take begin-position ast)
+                 (list (list (nth ast begin-position) operator (nth ast end-position)))
+                 (drop (+ end-position 1) ast))
                 (butlast positions)))))))
 
 (defn add-parens-for-precedence-in-list [ast]
-  (add-parens-for-operator-precedence-in-list 'or (add-parens-for-operator-precedence-in-list 'and (add-parens-for-not-precedence-in-list ast))))
+  (add-parens-for-operator-precedence-in-list 'or (add-parens-for-operator-precedence-in-list 'and (add-parens-for-not-precedence-in-list 'not ast))))
 
 (defn add-parens-for-precedence
   "Applies add-parens-for-precedence-in-list recursively down the AST"
