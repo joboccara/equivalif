@@ -43,10 +43,10 @@
 (defn balanced?  [stack]
   (= 1 (count stack)))
 
-(defn add-parens-for-precedence
+(defn add-parens-for-precedence-in-list
   ([ast]
    (if (symbol? ast) ast
-     (add-parens-for-precedence ast (keep-indexed #(when (= %2 'not) %1) ast))))
+     (add-parens-for-precedence-in-list ast (keep-indexed #(when (= %2 'not) %1) ast))))
   ([ast not-positions]
    (if (empty? not-positions) ast
        (let [not-position (last not-positions)]
@@ -56,6 +56,12 @@
                  (list (list 'not (nth ast (+ 1 not-position))))
                  (drop (+ 2 not-position) ast))
                 (butlast not-positions)))))))
+
+(defn add-parens-for-precedence
+  "Applies add-parens-for-precedence-in-list recursively down the AST"
+  [ast]
+  (if (symbol? ast) ast
+      (map add-parens-for-precedence-in-list (add-parens-for-precedence-in-list ast))))
 
 (defn arity [operator]
   (condp = operator

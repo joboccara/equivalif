@@ -58,6 +58,14 @@
   (testing (is (= '(not (not (clojure.core/identity a)))
                   (parse "!!a")))))
 
+(deftest precedence-in-nested-expressions
+  (testing (is (= '(and
+                    (clojure.core/identity a)
+                    (and
+                     (clojure.core/identity b)
+                     (not (clojure.core/identity c))))
+                  (parse "a && (b && !c)")))))
+
 (deftest close-without-open
   (testing (is (= '() (parse ")")))))
 
