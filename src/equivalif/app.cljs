@@ -59,7 +59,7 @@
   (= (ast/parse expression) '()))
 
 (def non-comparable-expressions
-  [:div "The expressions don't contain the same variables"])
+  [:div {:class "no-truth-table"} "The expressions don't contain the same variables"])
 
 (defn text-input [expressions kw]
   [:input {:class "expression-input"
