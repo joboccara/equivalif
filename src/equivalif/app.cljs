@@ -1,12 +1,13 @@
 (ns equivalif.app
   (:require [reagent.core :as r]
+            [equivalif.ast-builder :as ast]
             [equivalif.evaluator :as evaluator]
             [equivalif.comparator :as comparator]))
 
-(declare expressions-form matching-class non-comparable-expressions text-input truth-table)
+(declare expressions-form invalid-expression? matching-class non-comparable-expressions text-input truth-table)
 
 (def app 
-  (let [expressions (r/atom {:expression1 "a && b", :expression2 "a || b"})]
+  (let [expressions (r/atom {:expression1 "a & b", :expression2 "a || b"})]
   (fn []
    [:<>
      [:div
@@ -23,7 +24,9 @@
 (defn expressions-form [expressions]
      [:form
        [:div {:class "expression-input-with-label"}
-         [:label {:for "expression1" :class "expression-label"} "Compare"] (text-input expressions :expression1)]
+         [:label {:for "expression1" :class "expression-label"} "Compare"]
+         (text-input expressions :expression1)
+         (when (invalid-expression? (:expression1 @expressions)) [:div {:class "invalid-expression"} "Invalid expression"])]
        [:div {:class "expression-input-with-label"}
          [:label {:for "expression2" :class "expression-label"} "With"] (text-input expressions :expression2)]])
 
@@ -48,6 +51,9 @@
 
 (defn matching-class [v1 v2]
   (if (= v1 v2) "match" "mismatch"))
+
+(defn invalid-expression? [expression]
+  (= (ast/parse expression) '()))
 
 (def non-comparable-expressions
   [:div "The expressions don't contain the same variables"])
