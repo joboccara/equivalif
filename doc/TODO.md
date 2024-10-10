@@ -1,2 +1,1 @@
-- Throw exception for invalid expressions such as `a b`
 - Allow full if-else statements
