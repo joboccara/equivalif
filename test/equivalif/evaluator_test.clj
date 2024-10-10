@@ -1,6 +1,6 @@
 (ns equivalif.evaluator-test
   (:require [clojure.test :refer [deftest is testing]]
-            [equivalif.evaluator :refer [find-vars truth-table]]))
+            [equivalif.truth-table :refer [find-vars truth-table]]))
 
 (deftest find-vars-test
   (testing "Returns all the variables in a boolean expression"

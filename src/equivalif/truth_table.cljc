@@ -1,4 +1,4 @@
-(ns equivalif.evaluator
+(ns equivalif.truth-table
   (:require [clojure.set :as set]
             [clojure.walk]
             [equivalif.ast-builder :as ast]

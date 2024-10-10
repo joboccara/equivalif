@@ -1,7 +1,7 @@
 (ns equivalif.app
   (:require [reagent.core :as r]
             [equivalif.ast-builder :as ast]
-            [equivalif.evaluator :as evaluator]
+            [equivalif.truth-table :as evaluator]
             [equivalif.comparator :as comparator]))
 
 (declare expressions-form expression-input invalid-expression? matching-class non-comparable-expressions text-input truth-table)

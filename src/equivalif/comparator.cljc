@@ -1,9 +1,9 @@
 (ns equivalif.comparator
-  (:require [equivalif.evaluator :as e]))
+  (:require [equivalif.truth-table :as e]))
 
 (declare comparable-truth-tables?)
 
-(defn comparable?  [expression1 expression2]
+(defn comparable? [expression1 expression2]
   (comparable-truth-tables? (e/truth-table expression1) (e/truth-table expression2)))
 
 (defn comparable-truth-tables?  [truth-table1 truth-table2]
