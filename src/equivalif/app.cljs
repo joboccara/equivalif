@@ -4,7 +4,7 @@
             [equivalif.evaluator :as evaluator]
             [equivalif.comparator :as comparator]))
 
-(declare expressions-form invalid-expression? matching-class non-comparable-expressions text-input truth-table)
+(declare expressions-form expression-input invalid-expression? matching-class non-comparable-expressions text-input truth-table)
 
 (def app 
   (let [expressions (r/atom {:expression1 "a & b", :expression2 "a || b"})]
@@ -23,12 +23,14 @@
 
 (defn expressions-form [expressions]
      [:form
-       [:div {:class "expression-input-with-label"}
-         [:label {:for "expression1" :class "expression-label"} "Compare"]
-         (text-input expressions :expression1)
-         (when (invalid-expression? (:expression1 @expressions)) [:div {:class "invalid-expression"} "Invalid expression"])]
-       [:div {:class "expression-input-with-label"}
-         [:label {:for "expression2" :class "expression-label"} "With"] (text-input expressions :expression2)]])
+       (expression-input expressions :expression1 "Compare")
+       (expression-input expressions :expression2 "With")])
+
+(defn expression-input [expressions kw display]
+  [:div {:class "expression-input-with-label"}
+         [:label {:for (name kw) :class "expression-label"} display]
+         (text-input expressions kw)
+         (when (invalid-expression? (kw @expressions)) [:div {:class "invalid-expression"} "Invalid expression"])])
 
 (defn truth-table [expressions]
   (let [variables (evaluator/find-vars (:expression1 @expressions))
