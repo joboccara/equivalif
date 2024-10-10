@@ -1,19 +1,16 @@
 (ns equivalif.truth-table
   (:require [clojure.set :as set]
-            [clojure.walk]
             [equivalif.ast-builder :as ast]
-            [equivalif.platform :as platform]))
+            [equivalif.evaluator :as evaluator]))
 
 (declare boolean-symbol? generate-combinations find-vars find-vars-in-ast identity-symbol?)
-
-(def inject clojure.walk/prewalk-replace)
 
 (defn truth-table-from-ast [ast]
   (let [vars (find-vars-in-ast ast)]
     (for [combination (generate-combinations vars [false true])]
       (let [variables-map (apply hash-map combination)]
         {:variables variables-map
-         :result (platform/p-eval (inject (merge variables-map platform/boolean-operators-map) ast))}))))
+         :result (evaluator/evaluate ast variables-map)}))))
 
 (defn generate-combinations [xs ys]
   (reduce (fn [combinations x]
