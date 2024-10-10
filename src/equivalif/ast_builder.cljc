@@ -64,14 +64,11 @@
                       (butlast positions))))))))
 
 (def add-parens-for-precedence-in-list
-  (let [not-precedence (add-parens-for-operator-precedence-in-list 'not)
-        and-precedence (add-parens-for-operator-precedence-in-list 'and)
-        or-predecence (add-parens-for-operator-precedence-in-list 'or)]
   #(-> %
-       not-precedence
-       and-precedence
-       or-predecence
-       )))
+       ((add-parens-for-operator-precedence-in-list 'not))
+       ((add-parens-for-operator-precedence-in-list 'and))
+       ((add-parens-for-operator-precedence-in-list 'or))
+       ))
 
 (defn add-parens-for-precedence
   "Applies add-parens-for-precedence-in-list recursively down the AST"
