@@ -1,6 +1,5 @@
 (ns equivalif.ast-builder
-  (:require [equivalif.lexer :as l]
-            [equivalif.platform :as platform]))
+  (:require [equivalif.lexer :as l]))
 
 (declare add-token-to-stack addable-to-stack ast-infix balanced? infix-operator? trim-parens token-to-symbol)
 
@@ -38,7 +37,7 @@
     (= :and (:type token)) 'and
     (= :or (:type token)) 'or
     (= :not (:type token)) 'not
-    :else `(identity ~(symbol (:name token)))))
+    :else (symbol (:name token))))
 
 (defn balanced?  [stack]
   (= 1 (count stack)))
@@ -73,15 +72,15 @@
 (defn add-parens-for-precedence
   "Applies add-parens-for-precedence-in-list recursively down the AST"
   [ast]
-  (if (symbol? ast) ast
-      (map add-parens-for-precedence (trim-parens (add-parens-for-precedence-in-list ast)))))
+  (let [current-level-with-precedence (trim-parens (add-parens-for-precedence-in-list ast))]
+    (if (symbol? current-level-with-precedence) current-level-with-precedence
+        (map add-parens-for-precedence current-level-with-precedence))))
 
 (defn arity [operator]
   (condp = operator
     'and 2
     'or 2
     'not 1
-    platform/qualified-identity-symbol 1
     0))
 
 (defn valid-infix-arity? [ast]
@@ -91,7 +90,6 @@
            (every? valid-infix-arity? (cons (first ast) (drop 2 ast))))
       (and (= (count (rest ast)) (arity (first ast)))
            (every? valid-infix-arity? (rest ast))))))
-
 
 (defn validate-infix-arity [ast]
   (if (valid-infix-arity? ast) ast invalid-expression))
