@@ -18,6 +18,7 @@
        (let [expression1 (:expression1 @expressions) expression2 (:expression2 @expressions)]
        (cond
          (or (empty? expression1) (empty? expression2)) nil
+         (or (invalid-expression? expression1) (invalid-expression? expression2)) nil
          (comparator/comparable? expression1 expression2) (truth-table expressions)
          :else non-comparable-expressions)))])))
 
