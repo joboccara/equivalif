@@ -81,5 +81,8 @@
 (deftest missing-second-arg-in-and
   (testing (is (= '() (parse "a &&")))))
 
+(deftest extra-and-paramter
+  (testing (is (= '() (parse "a && b c")))))
+
 (deftest empty-expression
   (testing (is (= '() (parse "")))))
