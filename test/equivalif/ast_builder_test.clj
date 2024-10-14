@@ -94,7 +94,3 @@
 (deftest custom-expressions-must-at-inner-level
   (testing (and (is (= '() (parse "value > 0")))
                 (is (= '() (parse "a && value > 0"))))))
-
-(deftest function-calls-are-variables
-  (testing (and #_(is (= (symbol "f(g(x) + h(y))") (parse "f(g(x) + h(y))")))
-                #_(is (= '() (parse "f(g(x) + h(y)"))))))
