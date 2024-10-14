@@ -42,7 +42,7 @@
     (if (nil? begin) tokens
         (let [end (closing-paren-position tokens begin)
               function-call-name (function-tokens-to-string (slice tokens begin end))]
-          (replace-slice tokens begin end (list {:type :variable, :name function-call-name}))))))
+          (recur (replace-slice tokens begin end (list {:type :variable, :name function-call-name})))))))
 
 (defn first-function-call-position [tokens]
   (let [positions (keep-indexed #(when (function-call? (first %2) (second %2)) %1) (partition 2 1 tokens))]
