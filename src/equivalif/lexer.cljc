@@ -71,7 +71,7 @@
   (let [string-tokens (map token-to-string tokens)]
     (apply str (concat (list (nth string-tokens 0)); function name
                        (list (nth string-tokens 1)); open paren
-                       (interpose " " (slice string-tokens 2 (- (count tokens) 1))); params interpersed with space
+                       (interpose " " (slice string-tokens 2 (- (count tokens) 1))); params interspersed with space
                        (list (last string-tokens)); close paren
                        ))))
 
