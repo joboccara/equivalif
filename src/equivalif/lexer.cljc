@@ -2,7 +2,7 @@
   (:require [clojure.string :as string]
             [equivalif.string-helpers :as string-helpers]))
 
-(declare adjacent-chars-regex closing-paren-position first-function-call-position function-call? function-tokens-to-string slice string-to-token)
+(declare adjacent-chars-regex closing-paren-position first-function-call-position function-call? function-tokens-to-string replace-slice slice string-to-token)
 
 (defn extract-tokens
   "Transforms source code into a list of tokens"
@@ -39,11 +39,10 @@
 
 (defn isolate-function-calls [tokens]
   (let [begin (first-function-call-position tokens)]
-    (if (nil?  begin) tokens
-        (let [end (closing-paren-position tokens begin)]
-          (concat (take begin tokens)
-                  (list {:type :variable, :name (function-tokens-to-string (slice tokens begin end))})
-                  (drop end tokens))))))
+    (if (nil? begin) tokens
+        (let [end (closing-paren-position tokens begin)
+              function-call-name (function-tokens-to-string (slice tokens begin end))]
+          (replace-slice tokens begin end (list {:type :variable, :name function-call-name}))))))
 
 (defn first-function-call-position [tokens]
   (let [positions (keep-indexed #(when (function-call? (first %2) (second %2)) %1) (partition 2 1 tokens))]
@@ -69,5 +68,10 @@
 
 (defn slice [coll begin-included end-excluded]
   (take (- end-excluded begin-included) (drop begin-included coll)))
+
+(defn replace-slice [coll begin-included end-excluded new-slice]
+  (concat (take begin-included coll)
+          new-slice
+          (drop end-excluded coll)))
 
 (def lex (comp isolate-function-calls extract-tokens))
