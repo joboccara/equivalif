@@ -37,13 +37,17 @@
     :close ")"
     :variable (:name token)))
 
+(def invalid-tokens [])
+
 (defn isolate-function-calls [tokens]
   (let [begin (first-function-call-position tokens)]
     (if (nil? begin) tokens
         (let [function-open-paren-position (+ begin 1)
-              end (+ (closing-paren-position tokens function-open-paren-position) 1)
-              function-call-name (function-tokens-to-string (slice tokens begin end))]
-          (recur (replace-slice tokens begin end (list {:type :variable, :name function-call-name})))))))
+              function-closing-paren-position (closing-paren-position tokens function-open-paren-position)]
+          (if (nil? function-closing-paren-position) invalid-tokens
+              (let [end (+ function-closing-paren-position 1)
+                    function-call-name (function-tokens-to-string (slice tokens begin end))]
+                (recur (replace-slice tokens begin end (list {:type :variable, :name function-call-name})))))))))
 
 (defn first-function-call-position [tokens]
   (let [positions (keep-indexed #(when (function-call? (first %2) (second %2)) %1) (partition 2 1 tokens))]
@@ -57,6 +61,7 @@
   ([depth tokens position]
    (let [token (nth tokens position)]
     (cond
+     (= position (- (count tokens) 1)) nil
      (and (= (:type token) :close) (= depth 0)) position
      (= (:type token) :close) (closing-paren-position (- depth 1) tokens (+ position 1))
      (= (:type token) :open) (closing-paren-position (+ depth 1) tokens (+ position 1))
