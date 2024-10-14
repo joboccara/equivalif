@@ -63,9 +63,9 @@
     (cond
      (= position (- (count tokens) 1)) nil
      (and (= (:type token) :close) (= depth 0)) position
-     (= (:type token) :close) (closing-paren-position (- depth 1) tokens (+ position 1))
-     (= (:type token) :open) (closing-paren-position (+ depth 1) tokens (+ position 1))
-     :else (closing-paren-position depth tokens (+ position 1))))))
+     (= (:type token) :close) (recur (- depth 1) tokens (+ position 1))
+     (= (:type token) :open) (recur (+ depth 1) tokens (+ position 1))
+     :else (recur depth tokens (+ position 1))))))
 
 (defn function-tokens-to-string [tokens]
   (let [string-tokens (map token-to-string tokens)]
