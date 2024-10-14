@@ -58,4 +58,5 @@
                 (is (= [{:type :variable, :name "a"} {:type :and} {:type :variable, :name "f(x)"}] (lex "a && f(x)")))
                 (is (= [{:type :variable, :name "f(x)"} {:type :and} {:type :variable, :name "f(y)"}] (lex "f(x) && f(y)")))
                 (is (= [{:type :variable, :name "f(a && b)"}] (lex "f(a && b)")))
+                (is (= [{:type :not} {:type :variable, :name "f(a && b)"}] (lex "!f(a && b)")))
                 )))
