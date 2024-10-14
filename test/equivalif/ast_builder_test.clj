@@ -86,3 +86,11 @@
 
 (deftest empty-expression
   (testing (is (= '() (parse "")))))
+
+(deftest and-custom-expression
+  (testing (is (= (list 'and 'a (symbol "value > 0"))
+                  (parse "a && (value > 0)")))))
+
+(deftest custom-expressions-must-at-inner-level
+  (testing (and (is (= '() (parse "value > 0")))
+                (is (= '() (parse "a && value > 0"))))))

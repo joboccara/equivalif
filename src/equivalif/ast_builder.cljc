@@ -1,7 +1,7 @@
 (ns equivalif.ast-builder
   (:require [equivalif.lexer :as l]))
 
-(declare add-token-to-stack addable-to-stack ast-infix balanced? infix-operator? trim-parens token-to-symbol)
+(declare add-token-to-stack addable-to-stack ast-infix balanced? boolean-infix-expression? infix-operator? trim-parens token-to-symbol)
 
 (defn infix-to-prefix [ast]
   (if (symbol? ast) ast ; else ast is a collection
@@ -11,6 +11,12 @@
 
 (defn infix-operator?  [symb]
   (some #(= % symb) ['and 'or]))
+
+(defn prefix-operator? [symb]
+  (= symb 'not))
+
+(defn boolean-operator? [symb]
+  (or (infix-operator? symb) (prefix-operator? symb)))
 
 (def invalid-expression '())
 
@@ -41,6 +47,23 @@
 
 (defn balanced?  [stack]
   (= 1 (count stack)))
+
+(defn intersperse [coll separator]
+  (butlast (interleave coll (repeat (count coll) separator))))
+
+(defn custom-expressions-to-symbols
+  ([ast] (custom-expressions-to-symbols :outer ast))
+  ([level ast]
+   (cond
+    (= ast invalid-expression) invalid-expression
+    (and (boolean-operator? ast) (= level :outer)) invalid-expression
+    (symbol? ast) ast
+    (boolean-infix-expression? ast) (map #(custom-expressions-to-symbols :inner %) ast)
+    (= level :inner) (symbol (apply str (intersperse ast " ")))
+    :else invalid-expression)))
+
+(defn boolean-infix-expression? [ast]
+  (or (prefix-operator? (first ast)) (infix-operator? (second ast))))
 
 (defn no-nil-list [& values]
   (remove nil? (apply list values)))
@@ -105,6 +128,8 @@
 
 (def ast #(-> %
           ast-infix
+          trim-parens
+          custom-expressions-to-symbols
           add-parens-for-precedence
           trim-parens
           validate-infix-arity
