@@ -96,8 +96,5 @@
                 (is (= '() (parse "a && value > 0"))))))
 
 (deftest function-calls-are-variables
-  (testing (and #_(is (= (list 'and (symbol "f(x)") (symbol "f(y)")) (parse "f(x) && f(y)")))
-                #_(is (= (list 'not (symbol "f(a && b)")) (parse "!f(a && b)")))
-                #_(is (= (list 'not (list 'or (symbol "f(a && b)") 'b)) (parse "!(f(a && b) || b)")))
-                #_(is (= (symbol "f(g(x) + h(y))") (parse "f(g(x) + h(y))")))
+  (testing (and #_(is (= (symbol "f(g(x) + h(y))") (parse "f(g(x) + h(y))")))
                 #_(is (= '() (parse "f(g(x) + h(y)"))))))
