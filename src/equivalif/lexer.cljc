@@ -40,7 +40,7 @@
 (defn isolate-function-calls [tokens]
   (let [begin (first-function-call-position tokens)]
     (if (nil? begin) tokens
-        (let [end (closing-paren-position tokens begin)
+        (let [end (+ (closing-paren-position tokens begin) 1)
               function-call-name (function-tokens-to-string (slice tokens begin end))]
           (recur (replace-slice tokens begin end (list {:type :variable, :name function-call-name})))))))
 
@@ -53,17 +53,17 @@
 
 (defn closing-paren-position
   ([tokens position] (closing-paren-position 0 tokens (+ position 1)))
-  ([depth [first-token & rest-tokens] position]
+  ([depth tokens position]
    (cond
-     (= (:type first-token) :close) position
-     :else (closing-paren-position depth rest-tokens (+ position 1)))))
+     (= (:type (nth tokens position)) :close) position
+     :else (closing-paren-position depth tokens (+ position 1)))))
 
 (defn function-tokens-to-string [tokens]
   (let [string-tokens (map token-to-string tokens)]
     (apply str (concat (list (nth string-tokens 0)); function name
                        (list (nth string-tokens 1)); open paren
                        (interpose " " (slice string-tokens 2 (- (count tokens) 1))); params interpersed with space
-                       (list (last string-tokens)); close params
+                       (list (last string-tokens)); close paren
                        ))))
 
 (defn slice [coll begin-included end-excluded]
