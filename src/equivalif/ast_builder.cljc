@@ -48,9 +48,6 @@
 (defn balanced?  [stack]
   (= 1 (count stack)))
 
-(defn intersperse [coll separator]
-  (butlast (interleave coll (repeat (count coll) separator))))
-
 (defn custom-expressions-to-symbols
   ([ast] (custom-expressions-to-symbols :outer ast))
   ([level ast]
@@ -59,7 +56,7 @@
     (and (boolean-operator? ast) (= level :outer)) invalid-expression
     (symbol? ast) ast
     (boolean-infix-expression? ast) (map #(custom-expressions-to-symbols :inner %) ast)
-    (= level :inner) (symbol (apply str (intersperse ast " ")))
+    (= level :inner) (symbol (apply str (interpose " " ast)))
     :else invalid-expression)))
 
 (defn boolean-infix-expression? [ast]
