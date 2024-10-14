@@ -57,4 +57,5 @@
   (testing (and (is (= [{:type :variable, :name "f(x + 1)"}] (lex "f(x + 1)")))
                 (is (= [{:type :variable, :name "a"} {:type :and} {:type :variable, :name "f(x)"}] (lex "a && f(x)")))
                 (is (= [{:type :variable, :name "f(x)"} {:type :and} {:type :variable, :name "f(y)"}] (lex "f(x) && f(y)")))
+                (is (= [{:type :variable, :name "f(a && b)"}] (lex "f(a && b)")))
                 )))
