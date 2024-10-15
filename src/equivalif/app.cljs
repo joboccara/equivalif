@@ -6,8 +6,22 @@
 
 (declare expressions-form expression-input invalid-expression? matching-class non-comparable-expressions text-input truth-table)
 
+(def default-expression1
+  "if (tomIsNice && !(tomIsNice && jerryIsMean)) {
+  patTomAndJerry();
+} else {
+  letTheDogIn();
+}")
+
+(def default-expression2
+ "if (tomIsNice && !jerryIsMean) {
+  patTomAndJerry();
+} else {
+  letTheDogIn();
+}")
+
 (def app 
-  (let [expressions (r/atom {:expression1 "tomIsNice || (!tomIsNice && !jerryIsMean)", :expression2 "tomIsNice || !jerryIsMean"})]
+  (let [expressions (r/atom {:expression1 default-expression1, :expression2 default-expression2})]
   (fn []
    [:<>
      [:div
