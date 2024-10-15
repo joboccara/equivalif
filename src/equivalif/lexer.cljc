@@ -1,8 +1,9 @@
 (ns equivalif.lexer
   (:require [clojure.string :as string]
+            [equivalif.collection-helpers :as collections]
             [equivalif.string-helpers :as string-helpers]))
 
-(declare adjacent-chars-regex closing-paren-position first-function-call-position function-call? function-tokens-to-string replace-slice slice string-to-token)
+(declare adjacent-chars-regex closing-paren-position first-function-call-position function-call? function-tokens-to-string string-to-token)
 
 (defn extract-tokens
   "Transforms source code into a list of tokens"
@@ -50,8 +51,8 @@
               function-closing-paren-position (closing-paren-position tokens function-open-paren-position)]
           (if (nil? function-closing-paren-position) invalid-tokens
               (let [end (+ function-closing-paren-position 1)
-                    function-call-name (function-tokens-to-string (slice tokens begin end))]
-                (recur (replace-slice tokens begin end (list {:type :variable, :name function-call-name})))))))))
+                    function-call-name (function-tokens-to-string (collections/slice tokens begin end))]
+                (recur (collections/replace-slice tokens begin end (list {:type :variable, :name function-call-name})))))))))
 
 (defn first-function-call-position [tokens]
   (let [positions (keep-indexed #(when (function-call? (first %2) (second %2)) %1) (partition 2 1 tokens))]
@@ -75,18 +76,9 @@
   (let [string-tokens (map token-to-string tokens)]
     (apply str (concat (list (nth string-tokens 0)); function name
                        (list (nth string-tokens 1)); open paren
-                       (interpose " " (slice string-tokens 2 (- (count tokens) 1))); params interspersed with space
+                       (interpose " " (collections/slice string-tokens 2 (- (count tokens) 1))); params interspersed with space
                        (list (last string-tokens)); close paren
                        ))))
-
-(defn slice [coll begin-included end-excluded]
-  (take (- end-excluded begin-included) (drop begin-included coll)))
-
-(defn replace-slice [coll begin-included end-excluded new-slice]
-  (if (= (+ begin-included 1) end-excluded) coll
-      (concat (take begin-included coll)
-              new-slice
-              (drop end-excluded coll))))
 
 (defn remove-newlines-around-block-delimiters
   ([tokens]
@@ -102,7 +94,7 @@
              end-included (if (and (< position (- (count tokens) 1)) (= (nth tokens (+ position 1)) newline-token))
                    (+ position 1)
                    position)]
-         (recur (butlast positions) (replace-slice tokens begin (+ end-included 1) [(nth tokens position)]))))))
+         (recur (butlast positions) (collections/replace-slice tokens begin (+ end-included 1) [(nth tokens position)]))))))
 
 (def lex
   #(-> %
