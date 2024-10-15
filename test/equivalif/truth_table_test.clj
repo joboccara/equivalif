@@ -37,3 +37,10 @@
                      {:variables {'a true, 'b false}, :result false},
                      {:variables {'a true, 'b true}, :result true}]
                     (truth-table "if (a && b) {a} else {b}")))))
+
+(deftest nested-ifs
+  (testing (is (= [{:variables {'a false, 'b false}, :result false}
+                   {:variables {'a false, 'b true}, :result "c"}
+                   {:variables {'a true, 'b false}, :result "c"}
+                   {:variables {'a true, 'b true}, :result true}]
+                  (truth-table "if (a) {if (b) {a} else {c}} else {if (!b) {a} else {c}}")))))
