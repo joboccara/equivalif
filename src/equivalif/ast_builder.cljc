@@ -13,7 +13,7 @@
   (some #(= % symb) ['and 'or]))
 
 (defn prefix-operator? [symb]
-  (= symb 'not))
+  (some #(= % symb) ['not 'if]))
 
 (defn boolean-operator? [symb]
   (or (infix-operator? symb) (prefix-operator? symb)))
@@ -28,11 +28,12 @@
         :else (recur (add-token-to-stack stack (first tokens)) (rest tokens)))))
 
 (defn add-token-to-stack [stack token]
-  (let [open? (= :open (:type token))
-        close? (= :close (:type token))]
+  (let [open? (or (= :open (:type token)) (= :open-block (:type token)))
+        close? (or (= :close (:type token)) (= :close-block (:type token)))]
   (cond
     open? (conj stack [])
     close? (conj (pop (pop stack)) (conj (last (pop stack)) (last stack)))
+    (and (= (:type token) :else) (= (first (last stack)) 'if)) stack
     :else (conj (pop stack) (conj (last stack) (token-to-symbol token))))))
 
 (defn addable-to-stack [stack token]
@@ -43,6 +44,7 @@
     :and 'and
     :or 'or
     :not 'not
+    :if 'if
     (symbol (:name token))))
 
 (defn balanced?  [stack]
@@ -101,6 +103,7 @@
     'and 2
     'or 2
     'not 1
+    'if 3
     0))
 
 (defn valid-infix-arity? [ast]
@@ -122,6 +125,8 @@
 
 (defn deep-seq [ast]
   (if (coll? ast) (map deep-seq ast) ast))
+
+(defn tee [value] (println "tee" value) value)
 
 (def ast #(-> %
           ast-infix

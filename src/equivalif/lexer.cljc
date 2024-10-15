@@ -13,7 +13,7 @@
           symbols (mapcat #(string-helpers/split-keep-separator % adjacent-chars-regex) substrings)]
          (map string-to-token symbols))))
 
-(def adjacent-chars-regex #"\(|\)|!")
+(def adjacent-chars-regex #"\(|\)|\{|\}|!")
 
 (defn string-to-token
   "Transforms a string symbol into a token"
@@ -24,10 +24,14 @@
     (= string-symbol "!") {:type :not}
     (= string-symbol "(") {:type :open}
     (= string-symbol ")") {:type :close}
+    (= string-symbol "if") {:type :if}
+    (= string-symbol "else") {:type :else}
+    (= string-symbol "{") {:type :open-block}
+    (= string-symbol "}") {:type :close-block}
     :else {:type :variable, :name string-symbol}))
 
 (defn token-to-string
-  "Inverse of to-token"
+  "Transforms a token into a string symbol"
   [token]
   (condp = (:type token)
     :and "&&"

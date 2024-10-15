@@ -53,6 +53,11 @@
             {:type :close}]
            (lex "((a) (b))")))))
 
+(deftest if-else-block-tokens
+  (testing "if else and blocks return their tokens"
+    (is (= [{:type :if} {:type :open-block} {:type :variable, :name "a"} {:type :close-block} {:type :else} {:type :open-block} {:type :variable, :name "b"} {:type :close-block}]
+           (lex "if {a} else {b}")))))
+
 (deftest function-calls-converted-to-variables
   (testing (and (is (= [{:type :variable, :name "f(x + 1)"}] (lex "f(x + 1)")))
                 (is (= [{:type :variable, :name "a"} {:type :and} {:type :variable, :name "f(x)"}] (lex "a && f(x)")))
