@@ -27,7 +27,7 @@
 (def find-vars-in-ast (comp sort find-unsorted-vars-in-ast))
 
 (defn boolean-symbol?  [symb]
-  (some #(= % symb) ['and 'or 'not]))
+  (some #(= % symb) ['and 'or 'not 'if]))
 
 (def find-vars (comp find-vars-in-ast ast/parse))
 (def truth-table (comp truth-table-from-ast ast/parse))

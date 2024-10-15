@@ -19,3 +19,10 @@
     (is (= [{:variables {'a false}, :result false},
             {:variables {'a true}, :result true}]
            (truth-table "a")))))
+
+(deftest truth-table-if-else
+    (testing (is (= [{:variables {'a false, 'b false}, :result false},
+                     {:variables {'a false, 'b true}, :result true},
+                     {:variables {'a true, 'b false}, :result false},
+                     {:variables {'a true, 'b true}, :result true}]
+                    (truth-table "if (a && b) {a} else {b}")))))
