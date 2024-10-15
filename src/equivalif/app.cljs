@@ -4,7 +4,7 @@
             [equivalif.truth-table :as evaluator]
             [equivalif.comparator :as comparator]))
 
-(declare expressions-form expression-input invalid-expression? matching-class non-comparable-expressions text-input truth-table)
+(declare expressions-form expression-input invalid-expression? matching-class non-comparable-expressions text-input th-align-style truth-table)
 
 (def default-expression1
   "if (tomIsNice && !(tomIsNice && jerryIsMean)) {
@@ -56,8 +56,8 @@
      [:tr
      (for [variable variables]
        ^{:key (str "variable-" (name variable))} [:th  variable])
-     ^{:key (str "expression-1")} [:th (:expression1 @expressions)]
-     ^{:key (str "expression-2")} [:th (:expression2 @expressions)]]
+     ^{:key (str "expression-1")} [:th {:style (th-align-style (:expression1 @expressions))} (:expression1 @expressions)]
+     ^{:key (str "expression-2")} [:th {:style (th-align-style (:expression2 @expressions))} (:expression2 @expressions)]]
      (for [line compared-truth-table]
      ^{:key (str (:variables line))}
      [:tr
@@ -68,6 +68,11 @@
 
 (defn matching-class [v1 v2]
   (if (= v1 v2) "match" "mismatch"))
+
+(defn tee [value] (println "tee" value) value)
+
+(defn th-align-style [expression]
+  (if (tee (some #{\newline} expression)) {:text-align :left} {:text-align :center}))
 
 (defn invalid-expression? [expression]
   (= (ast/parse expression) '()))
