@@ -69,10 +69,8 @@
 (defn matching-class [v1 v2]
   (if (= v1 v2) "match" "mismatch"))
 
-(defn tee [value] (println "tee" value) value)
-
 (defn th-align-style [expression]
-  (if (tee (some #{\newline} expression)) {:text-align :left} {:text-align :center}))
+  (if (some #{\newline} expression) {:text-align :left} {:text-align :center}))
 
 (defn invalid-expression? [expression]
   (= (ast/parse expression) '()))
