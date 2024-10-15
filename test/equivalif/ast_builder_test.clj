@@ -104,7 +104,7 @@
                 )))
 
 (deftest multiline-if-else
-  (testing (is (= (list 'if 'a (symbol "do stuff \n and more") (symbol "do other stuff \n and still more"))
+  (testing (is (= (list 'if 'a (symbol "do stuff\nand more") (symbol "do other stuff\nand still more"))
                   (parse "if a {
 do stuff
 and more

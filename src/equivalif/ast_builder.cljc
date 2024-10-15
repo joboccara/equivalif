@@ -1,5 +1,6 @@
 (ns equivalif.ast-builder
-  (:require [equivalif.lexer :as l]))
+  (:require [equivalif.collection-helpers :refer [remove-around-value]]
+            [equivalif.lexer :as l]))
 
 (declare add-token-to-stack addable-to-stack ast-infix balanced? boolean-infix-expression? infix-operator? trim-parens token-to-symbol)
 
@@ -58,7 +59,7 @@
     (and (boolean-operator? ast) (= level :outer)) invalid-expression
     (symbol? ast) ast
     (boolean-infix-expression? ast) (map #(custom-expressions-to-symbols :inner %) ast)
-    (= level :inner) (symbol (apply str (interpose " " ast)))
+    (= level :inner) (symbol (apply str (remove-around-value (interpose " " ast) " " #{(symbol "\n")})))
     :else invalid-expression)))
 
 (defn boolean-infix-expression? [ast]
@@ -125,8 +126,6 @@
 
 (defn deep-seq [ast]
   (if (coll? ast) (map deep-seq ast) ast))
-
-(defn tee [value] (println "tee" value) value)
 
 (def ast #(-> %
           ast-infix
