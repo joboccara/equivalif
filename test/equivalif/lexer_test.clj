@@ -58,6 +58,15 @@
     (is (= [{:type :if} {:type :open-block} {:type :variable, :name "a"} {:type :close-block} {:type :else} {:type :open-block} {:type :variable, :name "b"} {:type :close-block}]
            (lex "if {a} else {b}")))))
 
+(deftest spaces-are-removed-around-block-delimitations
+  (testing
+   (is (= [{:type :if} {:type :open-block}
+           {:type :variable, :name "a"} {:type :variable, :name "\n"} {:type :variable, :name "b"}
+           {:type :close-block} {:type :else} {:type :open-block}
+           {:type :variable, :name "c"}
+           {:type :close-block}]
+          (lex "if {\na\nb\n}\nelse\n{c}")))))
+
 (deftest function-calls-converted-to-variables
   (testing (and (is (= [{:type :variable, :name "f(x + 1)"}] (lex "f(x + 1)")))
                 (is (= [{:type :variable, :name "a"} {:type :and} {:type :variable, :name "f(x)"}] (lex "a && f(x)")))

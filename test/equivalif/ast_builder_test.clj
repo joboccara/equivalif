@@ -102,3 +102,14 @@
                 (is (= (list 'if '(and a b) 'a (symbol "do stuff")) (parse "if (a && b) a else {do stuff}")))
                 (is (= (list 'if '(and a b) (symbol "do stuff") (symbol "do other stuff")) (parse "if (a && b) {do stuff} else {do other stuff}")))
                 )))
+
+(deftest multiline-if-else
+  (testing (is (= (list 'if 'a (symbol "do stuff \n and more") (symbol "do other stuff \n and still more"))
+                  (parse "if a {
+do stuff
+and more
+} else
+{
+do other stuff
+and still more
+}")))))
