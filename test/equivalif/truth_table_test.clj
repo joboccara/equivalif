@@ -13,6 +13,10 @@
   (testing "A variable that is only present as the body of an if or else branch is a code block and not a variable"
     (is (= '(a b) (find-vars "if (a && b) {codeblock} else {b}")))))
 
+(deftest variable-in-if-condition
+  (testing "A variable in the condition of an if is a variable"
+    (is (= '(a) (find-vars "if (a) {codeblock1} {codeblock2}")))))
+
 (deftest truth-table-test
   (testing "Returns the value of a boolean expression for each combination of values of its variables"
     (is (= [{:variables {'a false, 'b false}, :result false},
