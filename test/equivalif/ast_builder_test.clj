@@ -113,3 +113,6 @@ and more
 do other stuff
 and still more
 }")))))
+
+(deftest else-block-requires-else-keyword
+  (testing (is (= '() (parse "if (a) {b} {c}")))))

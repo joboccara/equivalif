@@ -15,7 +15,7 @@
 
 (deftest variable-in-if-condition
   (testing "A variable in the condition of an if is a variable"
-    (is (= '(a) (find-vars "if (a) {codeblock1} {codeblock2}")))))
+    (is (= '(a) (find-vars "if (a) {codeblock1} else {codeblock2}")))))
 
 (deftest truth-table-test
   (testing "Returns the value of a boolean expression for each combination of values of its variables"

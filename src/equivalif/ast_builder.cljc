@@ -32,13 +32,14 @@
   (let [open? (contains? #{:open :open-block} (:type token))
         close? (contains? #{:close :close-block} (:type token))]
   (cond
+    (and (= (first (last stack)) 'if) (= (last (last stack)) 'else)) (add-token-to-stack (conj (pop stack) (pop (last stack))) token)
     open? (conj stack [])
     close? (conj (pop (pop stack)) (conj (last (pop stack)) (last stack)))
-    (and (= (:type token) :else) (= (first (last stack)) 'if)) stack
     :else (conj (pop stack) (conj (last stack) (token-to-symbol token))))))
 
 (defn addable-to-stack [stack token]
-  (not (and (= :close (:type token)) (<= (count stack) 1))))
+  (and (not (and (= :close (:type token)) (<= (count stack) 1)))
+       (not (and (= (first (last stack)) 'if) (not= (:type token) :else) (= (count (last stack)) 3))))); the keyword :else is required to introduce the else block
 
 (defn token-to-symbol [token]
   (condp = (:type token)
@@ -46,6 +47,7 @@
     :or 'or
     :not 'not
     :if 'if
+    :else 'else
     (symbol (:name token))))
 
 (defn balanced?  [stack]
