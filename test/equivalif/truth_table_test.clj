@@ -6,6 +6,13 @@
   (testing "Returns all the variables in a boolean expression"
     (is (= '(a b c) (find-vars "(a && b) || ((!b) || c)")))))
 
+(deftest variable-in-if-else-block
+  (testing (is (= '(a b) (find-vars "if (a && b) {a} else {b}")))))
+
+(deftest code-blocks-are-not-variables
+  (testing "A variable that is only present as the body of an if or else branch is a code block and not a variable"
+    (is (= '(a b) (find-vars "if (a && b) {codeblock} else {b}")))))
+
 (deftest truth-table-test
   (testing "Returns the value of a boolean expression for each combination of values of its variables"
     (is (= [{:variables {'a false, 'b false}, :result false},
