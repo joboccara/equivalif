@@ -10,10 +10,10 @@
               (drop end-excluded coll))))
 
 (defn remove-around-value
-  ([coll]
-   (let [positions (keep-indexed #(when (contains? #{:open-block :close-block} (:type %2)) %1) coll)]
-     (remove-around-value positions coll)))
-  ([positions coll]
+  ([coll around-values-set]
+   (let [positions (keep-indexed #(when (contains? around-values-set %2) %1) coll)]
+     (remove-around-value '() positions coll)))
+  ([_ positions coll]
    (if (empty? positions) coll
        (let [position (last positions)
              newline-token {:type :variable, :name "\n"}
@@ -23,4 +23,4 @@
              end-included (if (and (< position (- (count coll) 1)) (= (nth coll (+ position 1)) newline-token))
                    (+ position 1)
                    position)]
-         (recur (butlast positions) (replace-slice coll begin (+ end-included 1) [(nth coll position)]))))))
+         (recur '() (butlast positions) (replace-slice coll begin (+ end-included 1) [(nth coll position)]))))))

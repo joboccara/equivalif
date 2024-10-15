@@ -80,9 +80,12 @@
                        (list (last string-tokens)); close paren
                        ))))
 
+(defn remove-newlines-around-block-delimiters [tokens]
+  (collections/remove-around-value tokens #{{:type :open-block} {:type :close-block}}))
+
 (def lex
   #(-> %
        extract-tokens
        isolate-function-calls
-       collections/remove-around-value
+       remove-newlines-around-block-delimiters
        ))
