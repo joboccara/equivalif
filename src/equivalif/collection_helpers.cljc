@@ -10,17 +10,17 @@
               (drop end-excluded coll))))
 
 (defn remove-newlines-around-block-delimiters
-  ([tokens]
-   (let [positions (keep-indexed #(when (contains? #{:open-block :close-block} (:type %2)) %1) tokens)]
-     (remove-newlines-around-block-delimiters positions tokens)))
-  ([positions tokens]
-   (if (empty? positions) tokens
+  ([coll]
+   (let [positions (keep-indexed #(when (contains? #{:open-block :close-block} (:type %2)) %1) coll)]
+     (remove-newlines-around-block-delimiters positions coll)))
+  ([positions coll]
+   (if (empty? positions) coll
        (let [position (last positions)
              newline-token {:type :variable, :name "\n"}
-             begin (if (and (> position 0) (= (nth tokens (- position 1)) newline-token))
+             begin (if (and (> position 0) (= (nth coll (- position 1)) newline-token))
                      (- position 1)
                      position)
-             end-included (if (and (< position (- (count tokens) 1)) (= (nth tokens (+ position 1)) newline-token))
+             end-included (if (and (< position (- (count coll) 1)) (= (nth coll (+ position 1)) newline-token))
                    (+ position 1)
                    position)]
-         (recur (butlast positions) (replace-slice tokens begin (+ end-included 1) [(nth tokens position)]))))))
+         (recur (butlast positions) (replace-slice coll begin (+ end-included 1) [(nth coll position)]))))))
