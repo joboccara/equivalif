@@ -39,3 +39,11 @@
           (is (= true (ev {'a false 'b true})))
           (is (= false (ev {'a true 'b false})))
           (is (= "codeblock" (ev {'a true 'b true})))))))
+
+(deftest evaluate-if-else-with-two-code-blocks
+  (testing
+   (let [ev #(evaluate '(if (and a b) codeblock1 codeblock2) %)]
+     (and (is (= "codeblock2" (ev {'a false 'b false})))
+          (is (= "codeblock2" (ev {'a false 'b true})))
+          (is (= "codeblock2" (ev {'a true 'b false})))
+          (is (= "codeblock1" (ev {'a true 'b true})))))))
