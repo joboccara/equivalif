@@ -40,6 +40,14 @@
           (is (= false (ev {'a true 'b false})))
           (is (= "codeblock" (ev {'a true 'b true})))))))
 
+(deftest evaluate-if-else-with-code-block-with-newline
+  (testing
+   (let [ev #(evaluate (list 'if '(and a b) (symbol "line1\nline2") 'b) %)]
+     (and (is (= false (ev {'a false 'b false})))
+          (is (= true (ev {'a false 'b true})))
+          (is (= false (ev {'a true 'b false})))
+          (is (= "line1\nline2" (ev {'a true 'b true})))))))
+
 (deftest evaluate-if-else-with-two-code-blocks
   (testing
    (let [ev #(evaluate '(if (and a b) codeblock1 codeblock2) %)]
