@@ -26,7 +26,7 @@
     (and (coll? ast) (= (first ast) 'if)) (apply set/union (cons (find-unsorted-vars-in-ast (second ast) false)
                                                                  (map #(find-unsorted-vars-in-ast % true) (drop 2 ast))))
     (coll? ast) (apply set/union (map #(find-unsorted-vars-in-ast % false) ast))
-    :else nil)))
+    :else #{})))
 
 (def find-vars-in-ast (comp sort find-unsorted-vars-in-ast))
 
