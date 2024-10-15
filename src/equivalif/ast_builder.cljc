@@ -28,8 +28,8 @@
         :else (recur (add-token-to-stack stack (first tokens)) (rest tokens)))))
 
 (defn add-token-to-stack [stack token]
-  (let [open? (or (= :open (:type token)) (= :open-block (:type token)))
-        close? (or (= :close (:type token)) (= :close-block (:type token)))]
+  (let [open? (contains? #{:open :open-block} (:type token))
+        close? (contains? #{:close :close-block} (:type token))]
   (cond
     open? (conj stack [])
     close? (conj (pop (pop stack)) (conj (last (pop stack)) (last stack)))
