@@ -7,7 +7,7 @@
 (declare expressions-form expression-input invalid-expression? matching-class non-comparable-expressions text-input truth-table)
 
 (def app 
-  (let [expressions (r/atom {:expression1 "isNice(tom) && !isNasty(jerry)", :expression2 "isNice(tom) || isNasty(jerry)"})]
+  (let [expressions (r/atom {:expression1 "tomIsNice || (!tomIsNice && !jerryIsMean)", :expression2 "tomIsNice || !jerryIsMean"})]
   (fn []
    [:<>
      [:div
