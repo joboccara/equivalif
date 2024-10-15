@@ -99,6 +99,6 @@
   (testing (and (is (= '(if condition a b) (parse "if condition a else b")))
                 (is (= '(if (and a b) a b) (parse "if (a && b) a else b")))
                 (is (= (list 'if '(and a b) (symbol "do stuff") 'b) (parse "if (a && b) {do stuff} else {b}")))
-                #_(is (= (list 'if '(and a b) 'a (symbol "do stuff")) (parse "if (a && b) a else do stuff")))
-                #_(is (= (list 'if '(and a b) (symbol "do stuff") (symbol "do other stuff")) (parse "if (a && b) do stuff else do other stuff")))
+                (is (= (list 'if '(and a b) 'a (symbol "do stuff")) (parse "if (a && b) a else {do stuff}")))
+                (is (= (list 'if '(and a b) (symbol "do stuff") (symbol "do other stuff")) (parse "if (a && b) {do stuff} else {do other stuff}")))
                 )))
