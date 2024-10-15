@@ -10,4 +10,5 @@
         (= (nth ast 0) 'and) (and (evaluate (nth ast 1)) (evaluate (nth ast 2)))
         (= (nth ast 0) 'or) (or (evaluate (nth ast 1)) (evaluate (nth ast 2)))
         (= (nth ast 0) 'not) (not (evaluate (nth ast 1)))
+        (= (nth ast 0) 'if) (if (evaluate (nth ast 1)) (evaluate (nth ast 2)) (evaluate (nth ast 3)))
         :else nil)))
