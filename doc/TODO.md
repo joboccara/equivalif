@@ -1,1 +1,4 @@
 - Allow full if-else statements
+- If without else
+- Else if
+- Order variables by order of appearance
