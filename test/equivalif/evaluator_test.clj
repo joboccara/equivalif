@@ -26,9 +26,9 @@
 
 (deftest evaluate-if-else
   (testing
-   (let [ev #(evaluate '(if condition a b) %)]
-     (and (is (= true (ev {'condition true 'a true 'b false})))
-          (is (= false (ev {'condition true 'a false 'b true})))
-          (is (= false (ev {'condition false 'a true 'b false})))
-          (is (= true (ev {'condition false 'a false 'b true})))
+   (let [ev #(evaluate '(if (and a b) a b) %)]
+     (and (is (= false (ev {'a false 'b false})))
+          (is (= true (ev {'a false 'b true})))
+          (is (= false (ev {'a true 'b false})))
+          (is (= true (ev {'a true 'b true})))
           ))))
