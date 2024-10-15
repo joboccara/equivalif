@@ -32,7 +32,6 @@
   (let [open? (contains? #{:open :open-block} (:type token))
         close? (contains? #{:close :close-block} (:type token))]
   (cond
-    (and (= (first (last stack)) 'if) (= (last (last stack)) 'else)) (add-token-to-stack (conj (pop stack) (pop (last stack))) token)
     open? (conj stack [])
     close? (conj (pop (pop stack)) (conj (last (pop stack)) (last stack)))
     :else (conj (pop stack) (conj (last stack) (token-to-symbol token))))))
@@ -106,7 +105,7 @@
     'and 2
     'or 2
     'not 1
-    'if 3
+    'if 4
     0))
 
 (defn valid-infix-arity? [ast]

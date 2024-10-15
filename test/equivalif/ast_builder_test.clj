@@ -96,15 +96,15 @@
                 (is (= '() (parse "a && value > 0"))))))
 
 (deftest if-else
-  (testing (and (is (= '(if condition a b) (parse "if condition a else b")))
-                (is (= '(if (and a b) a b) (parse "if (a && b) a else b")))
-                (is (= (list 'if '(and a b) (symbol "do stuff") 'b) (parse "if (a && b) {do stuff} else {b}")))
-                (is (= (list 'if '(and a b) 'a (symbol "do stuff")) (parse "if (a && b) a else {do stuff}")))
-                (is (= (list 'if '(and a b) (symbol "do stuff") (symbol "do other stuff")) (parse "if (a && b) {do stuff} else {do other stuff}")))
+  (testing (and (is (= '(if condition a else b) (parse "if condition a else b")))
+                (is (= '(if (and a b) a else b) (parse "if (a && b) a else b")))
+                (is (= (list 'if '(and a b) (symbol "do stuff") 'else 'b) (parse "if (a && b) {do stuff} else {b}")))
+                (is (= (list 'if '(and a b) 'a 'else (symbol "do stuff")) (parse "if (a && b) a else {do stuff}")))
+                (is (= (list 'if '(and a b) (symbol "do stuff") 'else (symbol "do other stuff")) (parse "if (a && b) {do stuff} else {do other stuff}")))
                 )))
 
 (deftest multiline-if-else
-  (testing (is (= (list 'if 'a (symbol "do stuff\nand more") (symbol "do other stuff\nand still more"))
+  (testing (is (= (list 'if 'a (symbol "do stuff\nand more") 'else (symbol "do other stuff\nand still more"))
                   (parse "if a {
 do stuff
 and more
@@ -116,3 +116,6 @@ and still more
 
 (deftest else-block-requires-else-keyword
   (testing (is (= '() (parse "if (a) {b} {c}")))))
+
+(deftest else-keyword-requires-else-block
+  (testing (is (= '() (parse "if (a) {b} else")))))
