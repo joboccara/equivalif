@@ -9,10 +9,10 @@
               new-slice
               (drop end-excluded coll))))
 
-(defn remove-newlines-around-block-delimiters
+(defn remove-around-value
   ([coll]
    (let [positions (keep-indexed #(when (contains? #{:open-block :close-block} (:type %2)) %1) coll)]
-     (remove-newlines-around-block-delimiters positions coll)))
+     (remove-around-value positions coll)))
   ([positions coll]
    (if (empty? positions) coll
        (let [position (last positions)

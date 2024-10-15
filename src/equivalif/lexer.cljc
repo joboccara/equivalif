@@ -84,5 +84,5 @@
   #(-> %
        extract-tokens
        isolate-function-calls
-       collections/remove-newlines-around-block-delimiters
+       collections/remove-around-value
        ))
