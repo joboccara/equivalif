@@ -83,8 +83,8 @@
 (defn remove-newlines-around-block-delimiters [tokens]
   (collections/remove-around-value
    tokens
-   #{{:type :open-block} {:type :close-block}}
-   {:type :variable, :name "\n"}))
+   {:type :variable, :name "\n"}
+   #{{:type :open-block} {:type :close-block}}))
 
 (def lex
   #(-> %

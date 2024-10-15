@@ -10,18 +10,18 @@
               (drop end-excluded coll))))
 
 (defn remove-around-value
-  ([coll around-values-set center-value]
-   (let [positions (keep-indexed #(when (contains? around-values-set %2) %1) coll)]
-     (remove-around-value '() positions coll center-value)))
-  ([_ positions coll center-value]
+  ([coll around-value center-values-set]
+   (let [positions (keep-indexed #(when (contains? center-values-set %2) %1) coll)]
+     (remove-around-value '() positions coll around-value)))
+  ([_ positions coll around-value]
    (if (empty? positions) coll
        (let [position (last positions)
-             begin (if (and (> position 0) (= (nth coll (- position 1)) center-value))
+             begin (if (and (> position 0) (= (nth coll (- position 1)) around-value))
                      (- position 1)
                      position)
-             end-included (if (and (< position (- (count coll) 1)) (= (nth coll (+ position 1)) center-value))
+             end-included (if (and (< position (- (count coll) 1)) (= (nth coll (+ position 1)) around-value))
                    (+ position 1)
                    position)]
          (recur '() (butlast positions)
                 (replace-slice coll begin (+ end-included 1) [(nth coll position)])
-                center-value)))))
+                around-value)))))
