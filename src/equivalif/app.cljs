@@ -62,9 +62,9 @@
   [:div {:class "no-truth-table"} "The expressions don't contain the same variables"])
 
 (defn text-input [expressions kw]
-  [:input {:class "expression-input"
-           :type "text"
-           :id (name kw)
-           :name (name kw)
-           :value (kw @expressions)
-           :on-change #(swap! expressions assoc kw (-> % .-target .-value))}])
+  [:textarea {:class "expression-input"
+              :type "text"
+              :id (name kw)
+              :name (name kw)
+              :value (kw @expressions)
+              :on-change #(swap! expressions assoc kw (-> % .-target .-value))}])
