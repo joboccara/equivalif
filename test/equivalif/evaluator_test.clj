@@ -30,5 +30,12 @@
      (and (is (= false (ev {'a false 'b false})))
           (is (= true (ev {'a false 'b true})))
           (is (= false (ev {'a true 'b false})))
-          (is (= true (ev {'a true 'b true})))
-          ))))
+          (is (= true (ev {'a true 'b true})))))))
+
+(deftest evaluate-if-else-with-code-block
+  (testing
+   (let [ev #(evaluate '(if (and a b) codeblock b) %)]
+     (and (is (= false (ev {'a false 'b false})))
+          (is (= true (ev {'a false 'b true})))
+          (is (= false (ev {'a true 'b false})))
+          (is (= "codeblock" (ev {'a true 'b true})))))))
