@@ -1,4 +1,4 @@
-(ns equivalif.evaluator-test
+(ns equivalif.truth-table-test
   (:require [clojure.test :refer [deftest is testing]]
             [equivalif.truth-table :refer [find-vars truth-table]]))
 
