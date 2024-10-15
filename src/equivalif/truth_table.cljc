@@ -3,7 +3,7 @@
             [equivalif.ast-builder :as ast]
             [equivalif.evaluator :as evaluator]))
 
-(declare boolean-symbol? generate-combinations find-vars find-vars-in-ast)
+(declare boolean-operator? generate-combinations find-vars find-vars-in-ast)
 
 (defn truth-table-from-ast [ast]
   (let [vars (find-vars-in-ast ast)]
@@ -21,7 +21,7 @@
   ([ast] (find-unsorted-vars-in-ast ast false))
   ([ast if-block?]
    (cond
-    (boolean-symbol? ast) #{}
+    (boolean-operator? ast) #{}
     (symbol? ast) (if if-block? nil #{ast})
     (and (coll? ast) (= (first ast) 'if)) (apply set/union (cons (find-unsorted-vars-in-ast (second ast) false)
                                                                  (map #(find-unsorted-vars-in-ast % true) (drop 2 ast))))
@@ -30,7 +30,7 @@
 
 (def find-vars-in-ast (comp sort find-unsorted-vars-in-ast))
 
-(defn boolean-symbol?  [symb]
+(defn boolean-operator?  [symb]
   (some #(= % symb) ['and 'or 'not 'if]))
 
 (def find-vars (comp find-vars-in-ast ast/parse))
