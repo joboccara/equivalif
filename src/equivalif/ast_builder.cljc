@@ -39,11 +39,11 @@
   (not (and (= :close (:type token)) (<= (count stack) 1))))
 
 (defn token-to-symbol [token]
-  (cond
-    (= :and (:type token)) 'and
-    (= :or (:type token)) 'or
-    (= :not (:type token)) 'not
-    :else (symbol (:name token))))
+  (condp = (:type token)
+    :and 'and
+    :or 'or
+    :not 'not
+    (symbol (:name token))))
 
 (defn balanced?  [stack]
   (= 1 (count stack)))
