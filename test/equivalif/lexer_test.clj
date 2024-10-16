@@ -67,6 +67,14 @@
            {:type :close-block}]
           (lex "if {\na\nb\n}\nelse\n{c}")))))
 
+(deftest elseif-token
+  (testing (is (= [{:type :if} {:type :open} {:type :variable :name "a"} {:type :close} {:type :open-block}
+                   {:type :variable, :name "codeblock1"}
+                   {:type :close-block} {:type :else-if} {:type :open} {:type :variable :name "b"} {:type :close} {:type :open-block}
+                   {:type :variable, :name "codeblock2"}
+                   {:type :close-block}]
+                  (lex "if (a) {codeblock1} else if (b) {codeblock2}")))))
+
 (deftest function-calls-converted-to-variables
   (testing (and (is (= [{:type :variable, :name "f(x + 1)"}] (lex "f(x + 1)")))
                 (is (= [{:type :variable, :name "a"} {:type :and} {:type :variable, :name "f(x)"}] (lex "a && f(x)")))

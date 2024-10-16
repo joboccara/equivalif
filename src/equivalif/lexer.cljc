@@ -1,5 +1,6 @@
 (ns equivalif.lexer
-  (:require [clojure.string :as string]
+  (:require [clojure.core :refer [read-string]]
+            [clojure.string :as string]
             [equivalif.collection-helpers :as collections]
             [equivalif.string-helpers :as string-helpers]))
 
@@ -86,9 +87,16 @@
    {:type :variable, :name "\n"}
    #{{:type :open-block} {:type :close-block}}))
 
+(defn else-if-as-one-token [tokens]
+  (let [token-strings (pr-str tokens)
+        else-then-if-string "{:type :else} {:type :if}"
+        else-if-string "{:type :else-if}"]
+    (read-string (clojure.string/replace token-strings else-then-if-string else-if-string))))
+
 (def lex
   #(-> %
        extract-tokens
        isolate-function-calls
        remove-newlines-around-block-delimiters
+       else-if-as-one-token
        ))
