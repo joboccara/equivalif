@@ -36,10 +36,19 @@
     close? (conj (pop (pop stack)) (conj (last (pop stack)) (last stack)))
     :else (conj (pop stack) (conj (last stack) (token-to-symbol token))))))
 
+(defn closing-paren-not-matching-opening-paren? [stack token]
+  (and (= :close (:type token)) (<= (count stack) 1)))
+
+(defn else-block-without-else-keyword? [stack token]
+  (and (= (first (last stack)) 'if) (not= (:type token) :else) (= (count (last stack)) 3)))
+
+(defn empty-expression? [stack token]
+  (and (= :close (:type token)) (empty? (last stack))))
+
 (defn addable-to-stack [stack token]
-  (and (not (and (= :close (:type token)) (<= (count stack) 1))); no closing paren that doesn't match an opening paren
-       (not (and (= (first (last stack)) 'if) (not= (:type token) :else) (= (count (last stack)) 3))); the :else keyword is required to introduce the else block
-       (not (and (= :close (:type token)) (empty? (last stack)))))); no empty expression
+  (and (not (closing-paren-not-matching-opening-paren? stack token))
+       (not (else-block-without-else-keyword? stack token))
+       (not (empty-expression? stack token))))
 
 (defn token-to-symbol [token]
   (condp = (:type token)
