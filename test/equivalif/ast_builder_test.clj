@@ -122,3 +122,6 @@ and still more
 
 (deftest if-without-else
   (testing (is (= '(if (and a b) b) (parse "if (a && b) {b}")))))
+
+(deftest if-with-empty-condition-is-invalid
+  (testing (is (= '() (parse "if () {codeblock1} else {codeblock2}")))))

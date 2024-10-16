@@ -37,8 +37,9 @@
     :else (conj (pop stack) (conj (last stack) (token-to-symbol token))))))
 
 (defn addable-to-stack [stack token]
-  (and (not (and (= :close (:type token)) (<= (count stack) 1)))
-       (not (and (= (first (last stack)) 'if) (not= (:type token) :else) (= (count (last stack)) 3))))); the keyword :else is required to introduce the else block
+  (and (not (and (= :close (:type token)) (<= (count stack) 1))); no closing paren that doesn't match an opening paren
+       (not (and (= (first (last stack)) 'if) (not= (:type token) :else) (= (count (last stack)) 3))); the :else keyword is required to introduce the else block
+       (not (and (= :close (:type token)) (empty? (last stack)))))); no empty expression
 
 (defn token-to-symbol [token]
   (condp = (:type token)
