@@ -105,7 +105,7 @@
     'and #{2}
     'or #{2}
     'not #{1}
-    'if #{4}
+    'if #{2 4}; if without else, or if with else
     #{0}))
 
 (defn valid-infix-arity? [ast]

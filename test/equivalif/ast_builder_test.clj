@@ -119,3 +119,6 @@ and still more
 
 (deftest else-keyword-requires-else-block
   (testing (is (= '() (parse "if (a) {b} else")))))
+
+(deftest if-without-else
+  (testing (is (= '(if (and a b) b) (parse "if (a && b) {b}")))))

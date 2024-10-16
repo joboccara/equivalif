@@ -1,3 +1,2 @@
-- If without else
 - Else if
 - Order variables by order of appearance

@@ -55,3 +55,11 @@
           (is (= "codeblock2" (ev {'a false 'b true})))
           (is (= "codeblock2" (ev {'a true 'b false})))
           (is (= "codeblock1" (ev {'a true 'b true})))))))
+
+(deftest evaluate-if-without-else
+  (testing "The evaluation returns nil if the condition is false"
+   (let [ev #(evaluate '(if (and a b) codeblock) %)]
+     (and (is (= nil (ev {'a false 'b false})))
+          (is (= nil (ev {'a false 'b true})))
+          (is (= nil (ev {'a true 'b false})))
+          (is (= "codeblock" (ev {'a true 'b true})))))))
