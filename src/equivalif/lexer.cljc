@@ -88,10 +88,9 @@
    #{{:type :open-block} {:type :close-block}}))
 
 (defn else-if-as-one-token [tokens]
-  (let [token-strings (pr-str tokens)
-        else-then-if-string "{:type :else} {:type :if}"
-        else-if-string "{:type :else-if}"]
-    (read-string (clojure.string/replace token-strings else-then-if-string else-if-string))))
+  (let [else-then-if [{:type :else} {:type :if}]
+        else-if [{:type :else-if}]]
+    (collections/gsub tokens else-then-if else-if)))
 
 (def lex
   #(-> %
