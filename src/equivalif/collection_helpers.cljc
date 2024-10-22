@@ -2,6 +2,8 @@
   (:require [clojure.core :refer [read-string]]
             [clojure.string :as string]))
 
+(declare sub-positions)
+
 (defn slice [coll begin-included end-excluded]
   (take (- end-excluded begin-included) (drop begin-included coll)))
 
@@ -11,11 +13,25 @@
               new-slice
               (drop end-excluded coll))))
 
-(defn gsub [coll old-sub new-sub]
-  (let [coll-as-string (pr-str coll)
-        old-sub-as-string (subs (subs (pr-str old-sub) 0 (dec (count (pr-str old-sub)))) 1)
-        new-sub-as-string (subs (subs (pr-str new-sub) 0 (dec (count (pr-str new-sub)))) 1)]
-    (read-string (string/replace coll-as-string old-sub-as-string new-sub-as-string))))
+(defn gsub
+  ([coll old-sub new-sub] (gsub (sub-positions coll old-sub) coll old-sub new-sub))
+  ([positions coll old-sub new-sub]
+   (if (empty? positions) coll
+       (let [position (last positions)]
+         (recur (butlast positions)
+                (replace-slice coll position (+ position (count old-sub)) new-sub)
+                old-sub
+                new-sub)))))
+
+(defn sub-positions
+  ([coll sub] (sub-positions 0 [] coll sub))
+  ([begin positions coll sub]
+   (if (= begin (count coll)) positions
+       (let [sub-length (count sub)
+             end-excluded (+ begin sub-length)]
+         (if (= (slice coll begin end-excluded) sub)
+           (recur end-excluded (conj positions begin) coll sub)
+           (recur (inc begin) positions coll sub))))))
 
 (defn remove-around-value
   ([coll around-value center-values-set]
