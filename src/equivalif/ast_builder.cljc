@@ -110,20 +110,20 @@
     (if (symbol? current-level-with-precedence) current-level-with-precedence
         (map add-parens-for-precedence current-level-with-precedence))))
 
-(defn possible-arities [operator]
+(defn valid-operator-arity? [operator arity]
   (condp = operator
-    'and #{2}
-    'or #{2}
-    'not #{1}
-    'if #{2 4}; if without else, or if with else
-    #{0}))
+    'and (= arity 2)
+    'or (= arity 2)
+    'not (= arity 1)
+    'if (contains? #{2 4} arity)
+    (= arity 0)))
 
 (defn valid-infix-arity? [ast]
   (if (symbol? ast) true 
     (if (infix-operator? (second ast))
-      (and (contains? (possible-arities (second ast)) (- (count ast) 1))
+      (and (valid-operator-arity? (second ast) (- (count ast) 1))
            (every? valid-infix-arity? (cons (first ast) (drop 2 ast))))
-      (and (contains? (possible-arities (first ast)) (count (rest ast)))
+      (and (valid-operator-arity? (first ast) (count (rest ast)))
            (every? valid-infix-arity? (rest ast))))))
 
 (defn validate-infix-arity [ast]
