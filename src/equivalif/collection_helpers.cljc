@@ -1,6 +1,4 @@
-(ns equivalif.collection-helpers 
-  (:require [clojure.core :refer [read-string]]
-            [clojure.string :as string]))
+(ns equivalif.collection-helpers)
 
 (declare sub-positions)
 
@@ -33,19 +31,9 @@
            (recur end-excluded (conj positions begin) coll sub)
            (recur (inc begin) positions coll sub))))))
 
-(defn remove-around-value
-  ([coll around-value center-values-set]
-   (let [positions (keep-indexed #(when (contains? center-values-set %2) %1) coll)]
-     (remove-around-value '() positions coll around-value)))
-  ([_ positions coll around-value]
-   (if (empty? positions) coll
-       (let [position (last positions)
-             begin (if (and (> position 0) (= (nth coll (- position 1)) around-value))
-                     (- position 1)
-                     position)
-             end-included (if (and (< position (- (count coll) 1)) (= (nth coll (+ position 1)) around-value))
-                   (+ position 1)
-                   position)]
-         (recur '() (butlast positions)
-                (replace-slice coll begin (+ end-included 1) [(nth coll position)])
-                around-value)))))
+(defn remove-around-value [coll around-value center-value]
+  (gsub (gsub coll
+              (list around-value center-value)
+              (list center-value))
+        (list center-value around-value)
+        (list center-value)))

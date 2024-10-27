@@ -82,10 +82,11 @@
                        ))))
 
 (defn remove-newlines-around-block-delimiters [tokens]
-  (collections/remove-around-value
-   tokens
-   {:type :variable, :name "\n"}
-   #{{:type :open-block} {:type :close-block}}))
+  (collections/remove-around-value (collections/remove-around-value tokens
+                                                                            {:type :variable, :name "\n"}
+                                                                            {:type :open-block})
+                                       {:type :variable, :name "\n"}
+                                       {:type :close-block}))
 
 (defn else-if-as-one-token [tokens]
   (let [else-then-if [{:type :else} {:type :if}]

@@ -70,7 +70,7 @@
     (and (boolean-operator? ast) (= level :outer)) invalid-expression
     (symbol? ast) ast
     (boolean-infix-expression? ast) (map #(custom-expressions-to-symbols :inner %) ast)
-    (= level :inner) (symbol (apply str (remove-around-value (interpose " " ast) " " #{(symbol "\n")})))
+    (= level :inner) (symbol (apply str (remove-around-value (interpose " " ast) " " (symbol "\n"))))
     :else invalid-expression)))
 
 (defn boolean-infix-expression? [ast]
