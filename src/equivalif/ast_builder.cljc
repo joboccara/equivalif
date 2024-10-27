@@ -40,7 +40,7 @@
   (and (= :close (:type token)) (<= (count stack) 1)))
 
 (defn else-block-without-else-keyword? [stack token]
-  (and (= (first (last stack)) 'if) (not (contains? #{:else :else-if} (:type token))) (= (mod (count (last stack)) 3) 0)))
+  (and (= (first (last stack)) 'if) (not (contains? #{:else :else-if :close-block} (:type token))) (= (mod (count (last stack)) 3) 0)))
 
 (defn empty-expression? [stack token]
   (and (= :close (:type token)) (empty? (last stack))))

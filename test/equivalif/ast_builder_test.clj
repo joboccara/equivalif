@@ -126,9 +126,13 @@ and still more
 (deftest if-with-empty-condition-is-invalid
   (testing (is (= '() (parse "if () {codeblock1} else {codeblock2}")))))
 
-(deftest nested-if
+(deftest nested-if-else
   (testing (is (= '(if a (if (and a b) a else b) else a)
                   (parse "if (a) { if (a && b) {a} else {b} } else {a}")))))
+
+(deftest nested-if
+  (testing (is (= '(if a (if b codeblock))
+                  (parse "if (a) { if (b) {codeblock} }")))))
 
 (deftest else-if
   (testing (is (= '(if a codeblock1 else-if b codeblock2 else codeblock3)
