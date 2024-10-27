@@ -81,7 +81,7 @@
 (deftest missing-second-arg-in-and
   (testing (is (= '() (parse "a &&")))))
 
-(deftest extra-and-paramter
+(deftest extra-and-parameter
   (testing (is (= '() (parse "a && b c")))))
 
 (deftest empty-expression
@@ -137,3 +137,6 @@ and still more
 (deftest else-if
   (testing (is (= '(if a codeblock1 else-if b codeblock2 else codeblock3)
                   (parse "if (a) {codeblock1} else if (b) {codeblock2} else {codeblock3}")))))
+
+(deftest if-if
+  (testing (is (= '() (parse "if (if) {codeblock}")))))

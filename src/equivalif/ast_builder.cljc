@@ -1,8 +1,8 @@
 (ns equivalif.ast-builder
-  (:require [equivalif.collection-helpers :refer [remove-around-value]]
+  (:require [equivalif.collection-helpers :refer [keep-if-index remove-around-value remove-if-index]]
             [equivalif.lexer :as l]))
 
-(declare add-token-to-stack addable-to-stack ast-infix balanced? boolean-infix-expression? infix-operator? trim-parens token-to-symbol)
+(declare add-token-to-stack addable-to-stack ast-infix balanced? boolean-infix-expression? infix-operator? trim-parens token-to-symbol valid-if-structure?)
 
 (defn infix-to-prefix [ast]
   (if (symbol? ast) ast ; else ast is a collection
@@ -127,8 +127,28 @@
       (and (valid-operator-arity? (first ast) (count (rest ast)))
            (every? valid-infix-arity? (rest ast))))))
 
+(defn valid-infix-operands? [ast]
+  (if (symbol? ast) true
+      (if (cond
+            (= (first ast) 'not) (not (boolean-operator? (second ast)))
+            (contains? #{'and 'or} (second ast)) (and (not (boolean-operator? (nth ast 0))) (not (boolean-operator? (nth ast 2))))
+            (some (set '(if else-if else)) ast) (valid-if-structure? ast)
+            :else false)
+        (every? valid-infix-operands? ast)
+        false)))
+
+(defn valid-if-structure? [ast]
+  (let [if-keywords (keep-if-index #(= (mod % 3) 0) ast)
+        expressions (remove-if-index #(= (mod % 3) 0) ast)]
+    (and (= (first if-keywords) 'if)
+         (every? #(= % 'else-if) (drop-last (rest if-keywords)))
+         (or (= (count ast) 3)
+             (and (= (mod (count ast) 3) 2) (= (last if-keywords) 'else))
+             (and (= (mod (count ast) 3) 0) (= (last if-keywords) 'else-if)))
+         (not-any? boolean-operator? expressions))))
+
 (defn validate-infix-arity [ast]
-  (if (valid-infix-arity? ast) ast invalid-expression))
+  (if (and (valid-infix-arity? ast) (valid-infix-operands? ast)) ast invalid-expression))
 
 (defn trim-parens [ast]
   (cond
