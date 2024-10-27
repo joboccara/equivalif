@@ -63,3 +63,43 @@
           (is (= nil (ev {'a false 'b true})))
           (is (= nil (ev {'a true 'b false})))
           (is (= "codeblock" (ev {'a true 'b true})))))))
+
+(deftest evaluate-if-else-if
+  (testing
+   (let [ev #(evaluate '(if a codeblock1 else-if b codeblock2) %)]
+     (and (is (= nil (ev {'a false 'b false})))
+          (is (= "codeblock2" (ev {'a false 'b true})))
+          (is (= "codeblock1" (ev {'a true 'b false})))
+          (is (= "codeblock1" (ev {'a true 'b true})))))))
+
+(deftest evaluate-if-else-if-else
+  (testing
+   (let [ev #(evaluate '(if a codeblock1 else-if b codeblock2 else codeblock3) %)]
+     (and (is (= "codeblock3" (ev {'a false 'b false})))
+          (is (= "codeblock2" (ev {'a false 'b true})))
+          (is (= "codeblock1" (ev {'a true 'b false})))
+          (is (= "codeblock1" (ev {'a true 'b true})))))))
+
+(deftest evaluate-if-else-if-else-if
+  (testing
+   (let [ev #(evaluate '(if a codeblock1 else-if b codeblock2 else-if c codeblock3) %)]
+     (and (is (= nil          (ev {'a false 'b false 'c false})))
+          (is (= "codeblock3" (ev {'a false 'b false 'c true})))
+          (is (= "codeblock2" (ev {'a false 'b true 'c false})))
+          (is (= "codeblock2" (ev {'a false 'b true 'c true})))
+          (is (= "codeblock1" (ev {'a true 'b false 'c false})))
+          (is (= "codeblock1" (ev {'a true 'b false 'c true})))
+          (is (= "codeblock1" (ev {'a true 'b true 'c false})))
+          (is (= "codeblock1" (ev {'a true 'b true 'c true})))))))
+
+(deftest evaluate-if-else-if-else-if-else
+  (testing
+   (let [ev #(evaluate '(if a codeblock1 else-if b codeblock2 else-if c codeblock3 else codeblock4) %)]
+     (and (is (= "codeblock4" (ev {'a false 'b false 'c false})))
+          (is (= "codeblock3" (ev {'a false 'b false 'c true})))
+          (is (= "codeblock2" (ev {'a false 'b true 'c false})))
+          (is (= "codeblock2" (ev {'a false 'b true 'c true})))
+          (is (= "codeblock1" (ev {'a true 'b false 'c false})))
+          (is (= "codeblock1" (ev {'a true 'b false 'c true})))
+          (is (= "codeblock1" (ev {'a true 'b true 'c false})))
+          (is (= "codeblock1" (ev {'a true 'b true 'c true})))))))

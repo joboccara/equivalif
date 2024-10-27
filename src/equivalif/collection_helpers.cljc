@@ -37,3 +37,6 @@
               (list center-value))
         (list center-value around-value)
         (list center-value)))
+
+(defn remove-if-index [pred coll]
+  (keep-indexed #(when ((complement pred) %1) %2) coll))
