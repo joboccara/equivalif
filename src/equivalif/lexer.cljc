@@ -1,6 +1,5 @@
 (ns equivalif.lexer
-  (:require [clojure.core :refer [read-string]]
-            [clojure.string :as string]
+  (:require [clojure.string :as string]
             [equivalif.collection-helpers :as collections]
             [equivalif.string-helpers :as string-helpers]))
 
