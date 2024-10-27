@@ -1,7 +1,7 @@
 (ns equivalif.app
   (:require [reagent.core :as r]
             [equivalif.ast-builder :as ast]
-            [equivalif.truth-table :as evaluator]
+            [equivalif.truth-table :as truth-table]
             [equivalif.comparator :as comparator]))
 
 (declare expressions-form expression-input invalid-expression? matching-class non-comparable-expressions text-input th-align-style truth-table)
@@ -48,7 +48,7 @@
          (when (invalid-expression? (kw @expressions)) [:div {:class "invalid-expression"} "Invalid expression"])])
 
 (defn truth-table [expressions]
-  (let [variables (evaluator/find-vars (:expression1 @expressions))
+  (let [variables (truth-table/find-vars (:expression1 @expressions))
         compared-truth-table (comparator/compared-truth-table (:expression1 @expressions) (:expression2 @expressions))]
   [:div
    [:table {:class "truth-table"}
