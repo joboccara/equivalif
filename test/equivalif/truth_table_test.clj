@@ -9,6 +9,9 @@
 (deftest variable-in-if-else-block
   (testing (is (= '(a b) (find-vars "if (a && b) {a} else {b}")))))
 
+(deftest variable-in-if-else-if-else-block
+  (testing (is (= '(a b) (find-vars "if (a) {a} else if (b) {b} else {c}")))))
+
 (deftest code-blocks-are-not-variables
   (testing "A variable that is only present as the body of an if or else branch is a code block and not a variable"
     (is (= '(a b) (find-vars "if (a && b) {codeblock} else {b}")))))

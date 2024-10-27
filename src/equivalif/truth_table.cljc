@@ -21,12 +21,14 @@
   ([ast] (find-unsorted-vars-in-ast ast false))
   ([ast if-block?]
    (cond
-    (boolean-operator? ast) #{}
-    (symbol? ast) (if if-block? nil #{ast})
-    (and (coll? ast) (= (first ast) 'if)) (apply set/union (cons (find-unsorted-vars-in-ast (second ast) false)
-                                                                 (map #(find-unsorted-vars-in-ast % true) (drop 2 ast))))
-    (coll? ast) (apply set/union (map #(find-unsorted-vars-in-ast % false) ast))
-    :else #{})))
+     (boolean-operator? ast) #{}
+     (symbol? ast) (if if-block? nil #{ast})
+     (and (coll? ast) (contains? #{'if 'else-if} (first ast))) (set/union (find-unsorted-vars-in-ast (nth ast 1) false)
+                                                                          (find-unsorted-vars-in-ast (nth ast 2) true)
+                                                                          (find-unsorted-vars-in-ast (drop 3 ast) false))
+     (and (coll? ast) (= 'else (first ast))) (find-unsorted-vars-in-ast (second ast) true)
+     (coll? ast) (apply set/union (map #(find-unsorted-vars-in-ast % false) ast))
+     :else #{})))
 
 (def find-vars-in-ast (comp sort find-unsorted-vars-in-ast))
 
