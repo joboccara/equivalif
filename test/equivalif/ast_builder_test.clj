@@ -129,3 +129,7 @@ and still more
 (deftest nested-if
   (testing (is (= '(if a (if (and a b) a else b) else a)
                   (parse "if (a) { if (a && b) {a} else {b} } else {a}")))))
+
+(deftest else-if
+  (testing (is (= '(if a codeblock1 else-if b codeblock2 else codeblock3)
+                  (parse "if (a) {codeblock1} else if (b) {codeblock2} else {codeblock3}")))))

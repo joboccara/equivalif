@@ -40,7 +40,7 @@
   (and (= :close (:type token)) (<= (count stack) 1)))
 
 (defn else-block-without-else-keyword? [stack token]
-  (and (= (first (last stack)) 'if) (not= (:type token) :else) (= (count (last stack)) 3)))
+  (and (= (first (last stack)) 'if) (not (contains? #{:else :else-if} (:type token))) (= (mod (count (last stack)) 3) 0)))
 
 (defn empty-expression? [stack token]
   (and (= :close (:type token)) (empty? (last stack))))
@@ -57,6 +57,7 @@
     :not 'not
     :if 'if
     :else 'else
+    :else-if 'else-if
     (symbol (:name token))))
 
 (defn balanced?  [stack]
@@ -115,7 +116,7 @@
     'and (= arity 2)
     'or (= arity 2)
     'not (= arity 1)
-    'if (contains? #{2 4} arity)
+    'if (contains? #{1 2} (mod arity 3))
     (= arity 0)))
 
 (defn valid-infix-arity? [ast]
