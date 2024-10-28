@@ -148,7 +148,7 @@
              (and (= (mod (count ast) 3) 0) (= (last if-keywords) 'else-if)))
          (not-any? boolean-operator? expressions))))
 
-(defn validate-infix-arity [ast]
+(defn validate-infix-operands [ast]
   (if (valid-infix-operands? ast) ast invalid-expression))
 
 (defn trim-parens [ast]
@@ -166,7 +166,7 @@
           custom-expressions-to-symbols
           add-parens-for-precedence
           trim-parens
-          validate-infix-arity
+          validate-infix-operands
           infix-to-prefix
           deep-seq))
 
