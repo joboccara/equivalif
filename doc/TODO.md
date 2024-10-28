@@ -1,2 +1,1 @@
-- Check for structure of else-if around valid-operator-arity?
 - Order variables by order of appearance
