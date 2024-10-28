@@ -1,1 +1,1 @@
-Repo for the [equivalif app](equivalif.vercel.app)
+Repo for the [equivalif app](https://equivalif.vercel.app)
