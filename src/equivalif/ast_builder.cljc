@@ -128,14 +128,15 @@
            (every? valid-infix-arity? (rest ast))))))
 
 (defn valid-infix-operands? [ast]
-  (if (symbol? ast) true
-      (if (cond
-            (= (first ast) 'not) (not (boolean-operator? (second ast)))
-            (contains? #{'and 'or} (second ast)) (and (not (boolean-operator? (nth ast 0))) (not (boolean-operator? (nth ast 2))))
-            (some (set '(if else-if else)) ast) (valid-if-structure? ast)
-            :else false)
-        (every? valid-infix-operands? ast)
-        false)))
+  (if (not (valid-infix-arity? ast)) false
+    (if (symbol? ast) true
+        (if (cond
+              (= (first ast) 'not) (not (boolean-operator? (second ast)))
+              (contains? #{'and 'or} (second ast)) (and (not (boolean-operator? (nth ast 0))) (not (boolean-operator? (nth ast 2))))
+              (some (set '(if else-if else)) ast) (valid-if-structure? ast)
+              :else false)
+          (every? valid-infix-operands? ast)
+          false))))
 
 (defn valid-if-structure? [ast]
   (let [if-keywords (keep-if-index #(= (mod % 3) 0) ast)
@@ -148,7 +149,7 @@
          (not-any? boolean-operator? expressions))))
 
 (defn validate-infix-arity [ast]
-  (if (and (valid-infix-arity? ast) (valid-infix-operands? ast)) ast invalid-expression))
+  (if (valid-infix-operands? ast) ast invalid-expression))
 
 (defn trim-parens [ast]
   (cond
