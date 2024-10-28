@@ -16,7 +16,7 @@
 (def default-expression2
  "if (tomIsNice && !jerryIsMean) {
   patTomAndJerry();
-} else {
+} else if (jerryIsMean) {
   letTheDogIn();
 }")
 
